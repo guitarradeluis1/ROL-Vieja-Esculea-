@@ -4,20 +4,34 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 	<meta charset="utf-8">
 	<title>ROL</title>
+	<style>
+	body{
+		background-color: #2e2e2e;
+		color: #ffffff;
+	}
+	.cudro {
+		border: 2px solid #ffffff;
+	}
+	.cudroNpc {
+		border: 2px solid #c5df68;
+	}
+	</style>
 </head>
 	<body>
 		<img src="./mapa1.jpg" style="display:none" >
-		<div style="width: 850px; height: 400px; border: 2px solid #000000;">
-			<canvas id="canvas" width="850" height="4000">   
-			Tu navegador no soporta html5...
-			</canvas>
+		<div id="divCanvas" class="cudroNegro">
+			<!--canvas-- id="canvas" width="85" height="40">Tu navegador no soporta html5...</!--canvas-->
 		</div>
-		<button id="">Nuevo personaje</button>
+		<button id="btn_size"> Tamaño </button>
+		<button id="btn_new"> Nuevo Personaje </button>
+		<button id="btn_ene"> Nuevo Enemigo </button>
+		<input type="color" id="color">
+		<span id="posicionEjemplo"></span>
 		<table>
 			<tr>
-				<td><div id="lista"></div></td>
-				<td><div id="datosJugador"></div></td>
-				<td><div id="datosNpc"></div></td>
+				<td class="cudro"><div id="lista"></div></td>
+				<td class="cudro"><div id="datosJugador"></div></td>
+				<td class="cudroNpc"><div id="listaNpc"></div></td>
 			</tr>
 		</table>
 	</body>
