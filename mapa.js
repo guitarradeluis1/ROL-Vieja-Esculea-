@@ -1,7 +1,14 @@
+/*
+Credo por Luis Bernal (guitarradeluis@gmail.com)
+Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo
+*/
 window.onload = function() {
+	console.log('Credo por Luis Bernal (guitarradeluis@gmail.com)');
+	console.log('Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo');
 	document.getElementById('btn_new').onclick = function(){ obj.newJugador(); };
 	document.getElementById('btn_ene').onclick = function(){ obj.newEnemigo(); };
 	document.getElementById('btn_size').onclick = function(){ obj.chaengeSizeGamers(); };
+	document.getElementById('btn_tiempo').onclick = function(){ obj.setTiempo(); };
 	obj.start();
 };
 var obj = {
@@ -17,6 +24,8 @@ var obj = {
 	npc: [],
 	selecion: 0,
 	tempPosicion: {x:20 , y:20},
+	intervalo: setInterval( function(){ obj.paintTime(); }, 1000),
+	dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
 	start: ()=>{
 		const { sizeWidth, sizeHeight, getMousePos, tempPosicion } = obj;
 		var divCanvas = document.getElementById("divCanvas");
@@ -248,5 +257,76 @@ var obj = {
 			};
 			detalles.appendChild(li);
 		});
-	}
+	},
+	//generar timepo
+	// intervalo
+	//dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
+	setTiempo: ()=>{
+		var { dia, initDia, stopTime } =obj;
+		var contenedor = document.getElementById('divData');
+		dia.desc = prompt("Descripción del día:", ``);
+		dia.minutos = parseInt(prompt("Cantidad enminutos de duración (Día) :", `${dia.minutos}`));
+		if (confirm(`Quieres dividir el dia de la noche (Cada dia durara ${dia.minutos} minutos y la noche ${dia.minutos} minutos)`)){
+			dia.division = true;
+		} else {
+			dia.division = false;
+		}
+		dia.numero = prompt("Comenzar desde el día:", `${dia.numero}`);
+		var text =  document.createElement('span');
+		text.setAttribute('id', 'tiempoText');
+		var estDia = "";
+		if(dia.division){
+			estDia = dia.noche? 'Noche': 'Día';
+		}
+		text.innerHTML = `<b>(${estDia}) :: ${dia.desc};</b> Dia: ${dia.numero}; (MINT ${dia.secuencia}) <br/>`;
+		contenedor.appendChild(text);
+		var start = document.createElement('span');
+		start.innerHTML = "<b>Comenzar</b> |";
+		start.style.cursor = "pointer";
+		start.onclick = function(){
+			initDia();
+		};
+		contenedor.appendChild(start);
+		var stop = document.createElement('span');
+		stop.innerHTML = "<b>Detener</b> |";
+		stop.style.cursor = "pointer";
+		stop.onclick = function(){
+			stopTime();
+		};
+		contenedor.appendChild(stop);
+	},
+	initDia: ()=>{
+		var { dia } = obj;
+		if (confirm(`Seguro quiere comenzar lacuenia de día?`)){
+			dia.play = true;
+		} 
+	},
+	stopTime: ()=>{ clearInterval(obj.intervalo); },
+	paintTime: ()=>{
+		var { dia } = obj;
+		if(dia.play){
+			var contenedor = document.getElementById('tiempoText');
+			dia.seg = parseInt(dia.seg) + 1;
+			if(dia.seg >= 60){
+				dia.seg = 0;
+				dia.mint = parseInt(dia.mint) + 1;
+			}
+			if( parseInt(dia.mint) >= parseInt(dia.minutos) ){
+				if(dia.division){
+					if(dia.noche){
+						dia.numero = parseInt(dia.numero) + 1;
+						dia.mint = 0;
+						dia.noche = false;
+					}else{
+						dia.noche = true;
+					}
+				}else{
+					dia.numero = parseInt(dia.numero) + 1;
+					dia.mint = 0;
+				}
+			}
+			var estDia = dia.noche? 'Noche': 'Día';
+			contenedor.innerHTML = `<b>(${estDia}) :: ${dia.desc};</b> Dia: ${dia.numero}; (Min ${dia.mint} Seg ${dia.seg}) <br/>`;
+		}
+	},
 };

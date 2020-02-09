@@ -12,6 +12,9 @@
 	.cudro {
 		border: 2px solid #ffffff;
 	}
+	.cudroData {
+		border: 2px solid #0ec526;
+	}
 	.cudroNpc {
 		border: 2px solid #c5df68;
 	}
@@ -19,14 +22,16 @@
 </head>
 	<body>
 		<img src="./mapa1.jpg" style="display:none" >
+		<button id="btn_size"> Tamaño </button>
+		<input type="color" id="color">
+		<button id="btn_new"> Nuevo Personaje </button>
+		<button id="btn_ene"> Nuevo Enemigo </button>
+		<span id="posicionEjemplo"></span>
+		<button id="btn_tiempo"> Tiempo </button>
 		<div id="divCanvas" class="cudroNegro">
 			<!--canvas-- id="canvas" width="85" height="40">Tu navegador no soporta html5...</!--canvas-->
 		</div>
-		<button id="btn_size"> Tamaño </button>
-		<button id="btn_new"> Nuevo Personaje </button>
-		<button id="btn_ene"> Nuevo Enemigo </button>
-		<input type="color" id="color">
-		<span id="posicionEjemplo"></span>
+		<div id="divData" class="cudroData"></div>
 		<table>
 			<tr>
 				<td class="cudro"><div id="lista"></div></td>
@@ -34,10 +39,9 @@
 				<td class="cudroNpc"><div id="listaNpc"></div></td>
 			</tr>
 		</table>
+		<br/>
+		Creado por: Luis Bernal (guitarradeluis@gmail.com)
 	</body>
 <script src='./mapa.js'></script>
 <script src='./personajes.js'></script>
-<script>
-
-</script>
 </html>

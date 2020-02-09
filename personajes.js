@@ -1,3 +1,8 @@
+/*
+Credo por Luis Bernal (guitarradeluis@gmail.com)
+Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo
+*/
+
 /**
  * sistema base para personajes o NPC
  * @description Solo busca crear una instancia facil de editar
@@ -47,7 +52,7 @@ var Jugador = function(tipo){
 	];
 	//this.imagen = prompt("Imagen:", "");
 	this.color =  "";//prompt("Color (ingles):", "");
-	this.vida = tipo? 0: prompt("Vida", "");
+	this.vida = prompt("Vida :", "");
 };
 
 /**
@@ -124,7 +129,7 @@ Jugador.prototype.setHabilidades = function(nombre){
  */
 Jugador.prototype.pv = function(id){
 	//let obj = this;
-	return this.id;
+	return this.vida;
 }
 
 /**
