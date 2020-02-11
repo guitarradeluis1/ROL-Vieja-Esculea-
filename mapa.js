@@ -9,6 +9,9 @@ window.onload = function() {
 	document.getElementById('btn_ene').onclick = function(){ obj.newEnemigo(); };
 	document.getElementById('btn_size').onclick = function(){ obj.chaengeSizeGamers(); };
 	document.getElementById('btn_tiempo').onclick = function(){ obj.setTiempo(); };
+	document.getElementById('btn_cotexto').onclick = function(){ obj.setColorTexto(); };
+	document.getElementById('btn_cuadros').onclick = function(){ obj.chaengeCuadricula(); };
+	document.getElementById('btn_contador').onclick = function(){ obj.contador(); };
 	obj.start();
 };
 var obj = {
@@ -26,6 +29,8 @@ var obj = {
 	tempPosicion: {x:20 , y:20},
 	intervalo: setInterval( function(){ obj.paintTime(); }, 1000),
 	dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
+	color: 'black',
+	cuadricula: {separacion: 40, color: 'white', grosor: 2},
 	start: ()=>{
 		const { sizeWidth, sizeHeight, getMousePos, tempPosicion } = obj;
 		var divCanvas = document.getElementById("divCanvas");
@@ -62,6 +67,11 @@ var obj = {
 			y: evt.clientY - rect.top
 		};
 	},
+	setColorTexto: ()=>{
+		var { reload } = obj;
+		obj.color = document.getElementById('color').value;
+		reload();
+	},
 	imagen: ()=>{
 		const { sizeWidth, sizeHeight } = obj;
 		var fondo = new Image();        
@@ -69,9 +79,9 @@ var obj = {
 		canvas.ctx.drawImage(fondo, 0, 0, sizeWidth, sizeHeight);
 	},
 	placeMap: ()=>{
-		const { sizeGamers, sizeText, jugadores } = obj;
+		const { sizeGamers, sizeText, jugadores, color } = obj;
 		jugadores.map(j=>{
-			canvas.ctx.fillStyle = `black`;
+			canvas.ctx.fillStyle = `${color}`;
 			canvas.ctx.font = `${sizeText}px Arial`;
 			canvas.ctx.fillText(`${j.personaje}`, j.x, j.y -2);
 			canvas.ctx.fillStyle = `${j.color}`;
@@ -79,9 +89,29 @@ var obj = {
 			canvas.ctx.beginPath();
 		});
 	},
+	paintCuadricula: ()=>{
+		const { cuadricula } = obj;
+		for (i = 0; i < 9000; i += cuadricula.separacion){
+			canvas.ctx.beginPath();
+			canvas.ctx.strokeStyle = `${cuadricula.color}`;
+			canvas.ctx.lineWidth = cuadricula.grosor;
+			canvas.ctx.moveTo(0, i);
+			canvas.ctx.lineTo(canvas.width, i);
+			canvas.ctx.stroke();
+		}
+		for (i = 0; i < 9000; i += cuadricula.separacion){
+			canvas.ctx.beginPath();
+			canvas.ctx.strokeStyle = `${cuadricula.color}`;
+			canvas.ctx.lineWidth = cuadricula.grosor;
+			canvas.ctx.moveTo(i, 0);
+			canvas.ctx.lineTo(i, canvas.width);
+			canvas.ctx.stroke();
+		}
+	},
 	reload: ()=>{
-		const { imagen, placeMap } = obj;
+		const { imagen, placeMap, paintCuadricula } = obj;
 		imagen();
+		paintCuadricula();
 		placeMap();
 	},
 	chaengeSizeGamers:()=>{
@@ -90,6 +120,18 @@ var obj = {
 		obj.sizeGamers = parseInt(tmp);
 		var tmp = prompt("Tamaño del texto (10, 20....):", "");
 		obj.sizeText = parseInt(tmp);
+		reload();
+	},
+	chaengeCuadricula: ()=>{
+		var { cuadricula, reload } = obj;
+		var newColor = document.getElementById('color').value;
+		if (confirm(`Cambiar al color selecionado ${newColor}?`)){
+			cuadricula.color = newColor;
+		}
+		var tmp = prompt("Grosor de lineas (1, 2....):", `${cuadricula.grosor}`);
+		cuadricula.grosor = parseInt(tmp);
+		var tmp = prompt("Separación de lineas (30, 40....):", `${cuadricula.separacion}`);
+		cuadricula.separacion = parseInt(tmp);
 		reload();
 	},
 	newJugador: ()=>{
@@ -226,6 +268,16 @@ var obj = {
 			list();
 		};
 		detalleJugador.appendChild(del);
+		var color = document.createElement('span');
+		color.innerHTML = "<b>Color</b> |";
+		color.style.cursor = "pointer";
+		color.onclick = function(){
+			data.setcolor( document.getElementById('color').value );
+			painData(id);
+			reload();
+			list();
+		};
+		detalleJugador.appendChild(color);
 		var del = document.createElement('span');
 		del.innerHTML = "<b>Eliminar</b> |";
 		del.style.cursor = "pointer";
@@ -328,5 +380,14 @@ var obj = {
 			var estDia = dia.noche? 'Noche': 'Día';
 			contenedor.innerHTML = `<b>(${estDia}) :: ${dia.desc};</b> Dia: ${dia.numero}; (Min ${dia.mint} Seg ${dia.seg}) <br/>`;
 		}
+	},
+	contador: ()=>{
+		var listContador = document.getElementById('listContador');
+		idTemp = ((new Date()).getTime() * parseInt((Math.random()*1000)));
+		var div = document.createElement('div');
+		div.setAttribute('id', idTemp);
+		listContador.appendChild(div);
+		var co = new Contador();
+		co.new(`${idTemp}`);
 	},
 };

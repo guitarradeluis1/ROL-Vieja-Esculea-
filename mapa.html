@@ -18,11 +18,18 @@
 	.cudroNpc {
 		border: 2px solid #c5df68;
 	}
+	.cudroContador {
+		border: 2px solid #c889fc;
+	}
 	</style>
 </head>
 	<body>
 		<img src="./mapa1.jpg" style="display:none" >
 		<button id="btn_size"> Tamaño </button>
+		<button id="btn_cotexto"> Color texto </button>
+		<button id="btn_cuadros"> Cuadricula </button>
+		<button id="btn_contador"> Nuevo Contador </button>
+		<hr/>
 		<input type="color" id="color">
 		<button id="btn_new"> Nuevo Personaje </button>
 		<button id="btn_ene"> Nuevo Enemigo </button>
@@ -37,6 +44,7 @@
 				<td class="cudro"><div id="lista"></div></td>
 				<td class="cudro"><div id="datosJugador"></div></td>
 				<td class="cudroNpc"><div id="listaNpc"></div></td>
+				<td class="cudroContador"><div id="listContador"></div></td>
 			</tr>
 		</table>
 		<br/>
@@ -44,4 +52,5 @@
 	</body>
 <script src='./mapa.js'></script>
 <script src='./personajes.js'></script>
+<script src='./contador.js'></script>
 </html>

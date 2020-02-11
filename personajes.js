@@ -74,6 +74,13 @@ Jugador.prototype.setOro = function(){
 }
 
 /**
+ * @description Cambia color
+ */
+Jugador.prototype.setcolor = function(co){
+	this.color = co;
+}
+
+/**
  * @description Cambia cantidad de experiencia y suvida de niles (10 = + 1NV)
  */
 Jugador.prototype.setExp = function(){
