@@ -12,9 +12,12 @@ window.onload = function() {
 	document.getElementById('btn_cotexto').onclick = function(){ obj.setColorTexto(); };
 	document.getElementById('btn_cuadros').onclick = function(){ obj.chaengeCuadricula(); };
 	document.getElementById('btn_contador').onclick = function(){ obj.contador(); };
+	document.getElementById('btn_mapa').onclick = function(){ obj.toogleMapa(); };
+	document.getElementById('btn_tablas').onclick = function(){ obj.toogleTabla(); };
 	obj.start();
 };
 var obj = {
+	show: true,
 	canvas: 0,
 	ctx: 0,
 	sizeWidth: 600,
@@ -31,6 +34,26 @@ var obj = {
 	dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
 	color: 'black',
 	cuadricula: {separacion: 40, color: 'white', grosor: 2},
+	toogleMapa:()=>{
+		var { show, sizeWidth, sizeHeight } = obj;
+		var divCanvas = document.getElementById('divCanvas');
+		var canvas = document.getElementById('canvas');
+		if(show){
+			divCanvas.style.display = 'none';
+			divCanvas.style.width = '0px';
+			divCanvas.style.height = '0px';
+			obj.show = false;
+		}else{
+			divCanvas.style.display = '';
+			divCanvas.style.width = `${sizeWidth}px`;
+			divCanvas.style.height = `${sizeHeight}px`;
+			obj.show = true; 
+		}
+		obj.reload();
+	},
+	toogleTabla: ()=>{
+		document.getElementById('divTablas').classList.toggle('esconder');
+	},
 	start: ()=>{
 		const { sizeWidth, sizeHeight, getMousePos, tempPosicion } = obj;
 		var divCanvas = document.getElementById("divCanvas");
@@ -232,10 +255,10 @@ var obj = {
 					<div id="detalleJugador"></div>
 				</td>
 				<td>
-					<b>Datos:</b><br/><ol id="detallesDatos"></ol>
+					<b>Habilidades:</b><br/><ol id="detallesHabilidad"></ol>
 				</td>
 				<td>
-					<b>Habilidades:</b><br/><ol id="detallesHabilidad"></ol>
+					<b>Datos:</b><br/><ol id="detallesDatos"></ol>
 				</td>
 		</tr>`;
 		html += `</table>`;
