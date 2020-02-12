@@ -34,6 +34,7 @@ var Jugador = function(tipo){
 	];
 	this.talentos = [];
 	this.transfondos = [];
+	this.armas = [];
 	this.habilidades = [
 		{nombre:'Alerta', puntos: 0},
 		{nombre:'Comunicacion', puntos: 0},
@@ -52,7 +53,7 @@ var Jugador = function(tipo){
 	];
 	//this.imagen = prompt("Imagen:", "");
 	this.color =  "";//prompt("Color (ingles):", "");
-	this.vida = prompt("Vida :", "");
+	this.vida = tipo? '':prompt("Vida :", "");
 };
 
 /**
@@ -78,6 +79,14 @@ Jugador.prototype.setOro = function(){
  */
 Jugador.prototype.setcolor = function(co){
 	this.color = co;
+}
+
+/**
+ * @description Cambia color
+ */
+Jugador.prototype.setVida = function(){
+	var tmp = prompt(`Vida (${this.vida})`, `${this.vida}`);
+	this.vida = parseInt(tmp);
 }
 
 /**
@@ -136,7 +145,15 @@ Jugador.prototype.setHabilidades = function(nombre){
  */
 Jugador.prototype.pv = function(id){
 	//let obj = this;
-	return this.vida;
+	if(this.tipo){
+		var nombreClase = this.clase.filter(cl => cl.id == this.claseId);
+		var cont = this.datos.filter(da => da.pref == 'CON');
+		//console.log(`${(nombreClase[0].da + cont[0].puntos)} (${nombreClase[0].da}DA + ${cont[0].puntos}CON)`);
+		//return `${(nombreClase[0].da + cont[0].puntos)} (${nombreClase[0].da}DA + ${cont[0].puntos}CON)`;
+		return (nombreClase[0].da + cont[0].puntos);
+	}else{
+		return this.vida;
+	}
 }
 
 /**
@@ -178,6 +195,37 @@ Jugador.prototype.pod = function(id){
 	//let obj = this;
 	return this.id;
 }
+
+Jugador.prototype.addArma = function(){
+	var nombre = prompt(`Nombre de la nueva Arma`, ``);
+	var puntos = prompt(`Puntaje (3, 2....)`, ``);
+	puntos = parseInt(puntos);
+	var peso = prompt(`Peso (3, 2....)`, ``);
+	peso = parseInt(peso);
+	var id = ((new Date()).getTime() * parseInt((Math.random()*1000)));
+	this.armas.push({id, nombre, puntos, peso});
+}
+
+Jugador.prototype.editArma = function(id){
+	var puntos = prompt(`Puntaje (3, 2....)`, ``);
+	puntos = parseInt(puntos);
+	var peso = prompt(`Peso (3, 2....)`, ``);
+	peso = parseInt(peso);
+	this.armas.filter(ar=>{
+		if(ar.id == id){
+			ar.puntos = puntos;
+			ar.peso = peso;
+		}
+	});
+}
+
+Jugador.prototype.deleteArma = function(id){
+	if (confirm("Seguro quieres eliminar el arma?")) {
+		this.armas = this.armas.filter(ar => ar.id !== id);
+	}
+}
+
+
 //var opcion = prompt("Introduzca su nombre:", "Aner Barrena")
 /*
 var txt;

@@ -183,8 +183,7 @@ var obj = {
 					li.setAttribute("id", j.id);
 					li.innerHTML = `
 						<b>${j.personaje}</b> ${j.nombre}<br/>
-						PV:<b>${j.pv()}</b><br/>
-						ORO:<b>${j.oro}</b><br/>
+						mo:<b>${j.oro}</b><br/>
 						NV:<b>${j.nivel} (${j.experiencia} Exp)</b><br/>
 					`;
 					li.onclick = function(){ 
@@ -213,7 +212,7 @@ var obj = {
 					li.innerHTML = `
 						<b>${j.personaje}</b> ${j.nombre}<br/>
 						PV:<b>${j.pv()}</b><br/>
-						ORO:<b>${j.oro}</b><br/>
+						mo:<b>${j.oro}</b> Oro<br/>
 						NV:<b>${j.nivel} (${j.experiencia} Exp)</b><br/>
 					`;
 					li.onclick = function(){ 
@@ -260,12 +259,27 @@ var obj = {
 				<td>
 					<b>Datos:</b><br/><ol id="detallesDatos"></ol>
 				</td>
+				<td>
+					<b>Puntos:</b><br/>
+					<ol id="detallesDatos">
+						<li><b>PV</b> DA+CON</li>
+						<li><b>DEF</b> armadura + escudo + 10</li>
+						<li><b>MOV</b> DES x metro o pies</li>
+						<li><b>ATQ (cuerpo)</b> t. nivel + bono clase + FUE</li>
+						<li><b>ATQ (proyectil)</b> t. nivel + bono clase + DES</li>
+						<li><b>INST</b> t. nivel + bono clase</li>
+						<li><b>POD</b> t. nivel + INT</li>
+					</ol>
+				</td>
+				<td>
+					<b>Armas:</b><br/><ul id="detallesArmas"></ul>
+				</td>
 		</tr>`;
 		html += `</table>`;
 		div.innerHTML = html;
 		var detalleJugador = document.getElementById('detalleJugador');
 		var oro = document.createElement('span');
-		oro.innerHTML = "<b>Oro</b> |";
+		oro.innerHTML = "<b>mo</b> oro |";
 		oro.style.cursor = "pointer";
 		oro.onclick = function(){
 			data.setOro();
@@ -291,6 +305,24 @@ var obj = {
 			list();
 		};
 		detalleJugador.appendChild(del);
+		var vida = document.createElement('span');
+		vida.innerHTML = "<b>Vida</b> |";
+		vida.style.cursor = "pointer";
+		vida.onclick = function(){
+			data.setVida();
+			painData(id);
+			list();
+		};
+		detalleJugador.appendChild(vida);
+		var arma = document.createElement('span');
+		arma.innerHTML = "<b>+Arma</b> |";
+		arma.style.cursor = "pointer";
+		arma.onclick = function(){
+			data.addArma();
+			painData(id);
+			list();
+		};
+		detalleJugador.appendChild(arma);
 		var color = document.createElement('span');
 		color.innerHTML = "<b>Color</b> |";
 		color.style.cursor = "pointer";
@@ -332,6 +364,36 @@ var obj = {
 			};
 			detalles.appendChild(li);
 		});
+		var PesoTotal = 0;
+		var detalles = document.getElementById('detallesArmas');
+		data.armas.map(ha=>{
+			var editarma = document.createElement('span');
+			editarma.innerHTML = " <b>Edit</b>";
+			editarma.style.cursor = "pointer";
+			editarma.onclick = function(){
+				data.editArma(ha.id);
+				painData(id);
+				list();
+			}
+			var delarma = document.createElement('span');
+			delarma.innerHTML = " <b>Deleted</b>";
+			delarma.style.cursor = "pointer";
+			delarma.onclick = function(){
+				data.deleteArma(ha.id);
+				painData(id);
+				list();
+			}
+			var li = document.createElement('li');
+			li.style.cursor = "pointer";
+			li.innerHTML = `${ha.nombre} (+${ha.puntos}) (-${ha.peso} Kg)`;
+			li.appendChild(editarma);
+			li.appendChild(delarma);
+			detalles.appendChild(li);
+			PesoTotal = PesoTotal + ha.peso;
+		});
+		var li = document.createElement('li');
+		li.innerHTML = `Peso Total: ${PesoTotal} Kg`;
+		detalles.appendChild(li);
 	},
 	//generar timepo
 	// intervalo
