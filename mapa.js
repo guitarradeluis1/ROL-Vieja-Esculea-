@@ -282,6 +282,9 @@ var obj = {
 				<td>
 					<b>Armas:</b><br/><ul id="detallesArmas"></ul>
 				</td>
+		</tr>
+		<tr>
+			<td colspan="5" ><b>Transfondo:</b> ${data.transfondos}</td>
 		</tr>`;
 		html += `</table>`;
 		div.innerHTML = html;

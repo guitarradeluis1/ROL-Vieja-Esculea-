@@ -33,7 +33,7 @@ var Jugador = function(tipo){
 		{id: 2, nombre:'Bribon', da: 6},
 	];
 	this.talentos = [];
-	this.transfondos = [];
+	this.transfondos = prompt("Transfondos:", "");;
 	this.armas = [];
 	this.habilidades = [
 		{nombre:'Alerta', puntos: 0},
