@@ -77,8 +77,10 @@ Jugador.prototype.setOro = function(){
 /**
  * @description Cambia color
  */
-Jugador.prototype.setcolor = function(co){
-	this.color = co;
+Jugador.prototype.setColor = function(co){
+	if (confirm("Seguro quieres cambiar el color?")) {
+		this.color = co;
+	}
 }
 
 /**

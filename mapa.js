@@ -237,7 +237,7 @@ var obj = {
 		reload();
 	},
 	painData: (id, tipo)=>{
-		const { jugadores, painData, list, reload, tempPosicion } = obj;
+		const { jugadores, painData, list, listNpc,  reload, tempPosicion } = obj;
 		var div = document.getElementById('datosJugador');
 		var data = jugadores.filter(j=> j.id == id);
 		data = data[0];
@@ -245,6 +245,10 @@ var obj = {
 			var nombreRaza = data.raza.filter(ra => ra.id == data.razaId);
 			var nombreClase = data.clase.filter(cl => cl.id == data.claseId);
 		}
+		var arayDatos = [];
+		data.datos.map(ha=>{
+			arayDatos[ha.pref] = ha.puntos;
+		});
 		var html = `
 		<table>
 			<tr>
@@ -270,13 +274,13 @@ var obj = {
 				<td>
 					<b>Puntos:</b><br/>
 					<ol id="detallesDatos">
-						<li><b>PV</b> DA+CON</li>
+						<li><b>PV</b> ${(nombreClase[0].da + arayDatos['CON'])} (${nombreClase[0].da}DA + ${arayDatos['CON']}CON)</li>
 						<li><b>DEF</b> armadura + escudo + 10</li>
 						<li><b>MOV</b> DES x metro o pies</li>
-						<li><b>ATQ (cuerpo)</b> t. nivel + bono clase + FUE</li>
-						<li><b>ATQ (proyectil)</b> t. nivel + bono clase + DES</li>
+						<li><b>ATQ (cuerpo)</b> t. nivel + bono clase + ${arayDatos['FUE']}FUE</li>
+						<li><b>ATQ (proyectil)</b> t. nivel + bono clase + ${arayDatos['DES']}DES</li>
 						<li><b>INST</b> t. nivel + bono clase</li>
-						<li><b>POD</b> t. nivel + INT</li>
+						<li><b>POD</b> t. nivel + ${arayDatos['INT']}INT</li>
 					</ol>
 				</td>
 				<td>
@@ -296,6 +300,7 @@ var obj = {
 			data.setOro();
 			painData(id);
 			list();
+			listNpc();
 		};
 		detalleJugador.appendChild(oro);
 		var exp = document.createElement('span');
@@ -305,6 +310,7 @@ var obj = {
 			data.setExp();
 			reload();
 			list();
+			listNpc();
 		};
 		detalleJugador.appendChild(exp);
 		var del = document.createElement('span');
@@ -314,6 +320,7 @@ var obj = {
 			data.setPosition(tempPosicion.x, tempPosicion.y);
 			painData(id);
 			list();
+			listNpc();
 		};
 		detalleJugador.appendChild(del);
 		var vida = document.createElement('span');
@@ -323,6 +330,7 @@ var obj = {
 			data.setVida();
 			painData(id);
 			list();
+			listNpc();
 		};
 		detalleJugador.appendChild(vida);
 		var arma = document.createElement('span');
@@ -332,18 +340,20 @@ var obj = {
 			data.addArma();
 			painData(id);
 			list();
+			listNpc();
 		};
 		detalleJugador.appendChild(arma);
-		var color = document.createElement('span');
-		color.innerHTML = "<b>Color</b> |";
-		color.style.cursor = "pointer";
-		color.onclick = function(){
-			data.setcolor( document.getElementById('color').value );
+		var editColor = document.createElement('span');
+		editColor.innerHTML = "<b>Color</b> |";
+		editColor.style.cursor = "pointer";
+		editColor.onclick = function(){
+			data.setColor( document.getElementById('color').value );
 			painData(id);
 			reload();
 			list();
+			listNpc();
 		};
-		detalleJugador.appendChild(color);
+		detalleJugador.appendChild(editColor);
 		var del = document.createElement('span');
 		del.innerHTML = "<b>Eliminar</b> |";
 		del.style.cursor = "pointer";
@@ -351,6 +361,7 @@ var obj = {
 			data.eliminar();
 			painData(id);
 			list();
+			listNpc();
 		};
 		detalleJugador.appendChild(del);
 		var detalles = document.getElementById('detallesDatos');
@@ -361,6 +372,9 @@ var obj = {
 			li.onclick = function(){ 
 				data.setDatos(`${ha.nombre}`);
 				painData(id);
+				reload();
+				list();
+				listNpc();
 			};
 			detalles.appendChild(li);
 		});
@@ -372,6 +386,9 @@ var obj = {
 			li.onclick = function(){ 
 				data.setHabilidades(`${ha.nombre}`);
 				painData(id);
+				reload();
+				list();
+				listNpc();
 			};
 			detalles.appendChild(li);
 		});
@@ -385,6 +402,7 @@ var obj = {
 				data.editArma(ha.id);
 				painData(id);
 				list();
+				listNpc();
 			}
 			var delarma = document.createElement('span');
 			delarma.innerHTML = " <b>Deleted</b>";
@@ -392,7 +410,9 @@ var obj = {
 			delarma.onclick = function(){
 				data.deleteArma(ha.id);
 				painData(id);
+				reload();
 				list();
+				listNpc();
 			}
 			var li = document.createElement('li');
 			li.style.cursor = "pointer";
