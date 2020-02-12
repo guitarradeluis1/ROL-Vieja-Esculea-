@@ -48,7 +48,7 @@ var Jugador = function(tipo){
 		{nombre:'Destreza', pref:'DES', puntos: 0},
 		{nombre:'Constitucion', pref:'CON', puntos: 0},
 		{nombre:'Inteligencia', pref:'INT', puntos: 0},
-		{nombre:'Sabiduria', pref:'SAB', puntos: 0},
+		{nombre:'Sabiduria', pref:'SAB', puntos: 3},
 		{nombre:'Carisma', pref:'CAR', puntos: 0},
 	];
 	//this.imagen = prompt("Imagen:", "");
