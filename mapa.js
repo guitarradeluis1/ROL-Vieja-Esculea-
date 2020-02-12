@@ -14,6 +14,7 @@ window.onload = function() {
 	document.getElementById('btn_contador').onclick = function(){ obj.contador(); };
 	document.getElementById('btn_mapa').onclick = function(){ obj.toogleMapa(); };
 	document.getElementById('btn_tablas').onclick = function(){ obj.toogleTabla(); };
+	document.getElementById('calculadora').onkeyup = function(){ obj.calculadora(); };
 	obj.start();
 };
 var obj = {
@@ -34,6 +35,13 @@ var obj = {
 	dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
 	color: 'black',
 	cuadricula: {separacion: 40, color: 'white', grosor: 2},
+	calculadora: ()=>{
+		try{
+			var text = document.getElementById('calculadora').value;
+			document.getElementById('resultado').innerHTML = eval(text);
+		} catch(error){
+		}
+	},
 	toogleMapa:()=>{
 		var { show, sizeWidth, sizeHeight } = obj;
 		var divCanvas = document.getElementById('divCanvas');
