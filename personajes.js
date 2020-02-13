@@ -112,6 +112,14 @@ Jugador.prototype.setVida = function(){
 }
 
 /**
+ * @description Cambia transfondo
+ */
+Jugador.prototype.setTransfondos = function(){
+	var tmp = prompt(`Transfondos`, `${this.transfondos}`);
+	this.transfondos = tmp;
+}
+
+/**
  * @description Cambia cantidad de experiencia y suvida de niles (10 = + 1NV)
  */
 Jugador.prototype.setExp = function(){
