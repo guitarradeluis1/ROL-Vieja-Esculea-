@@ -19,19 +19,39 @@ var Jugador = function(tipo){
 	this.personaje = prompt("Nombre:", "");
 	this.nivel = 0;
 	this.experiencia = 0;
-	this.razaId = tipo? prompt("Raza [0: Enano, 1: Mediano, 2: Humano, 3: Elfo]", ""): null;
-	this.raza = [
-		{id: 0, nombre:'Enano', mov: 9},
-		{id: 1, nombre:'Mediano', mov: 9},
-		{id: 2, nombre:'Humano', mov: 12},
-		{id: 3, nombre:'Elfo', mov: 12},
-	];
-	this.claseId = tipo? prompt("Clase [0: Guerrero, 1: Hechicero, 2: Bribon]", ""): null;
-	this.clase = [
-		{id: 0, nombre:'Guerrero', da: 8},
-		{id: 1, nombre:'Hechicero', da: 4},
-		{id: 2, nombre:'Bribon', da: 6},
-	];
+	this.raza = {};
+	if(tipo){
+		var tmp =  prompt("Raza [0: Enano, 1: Mediano, 2: Humano, 3: Elfo]", "");
+		switch(parseInt(tmp)){
+			case 0:
+				this.raza = {id: 0, nombre:'Enano', mov: 9};
+			break;
+			case 1:
+				this.raza = {id: 1, nombre:'Mediano', mov: 9};
+			break;
+			case 2:
+				this.raza = {id: 2, nombre:'Humano', mov: 12};
+			break;
+			case 3:
+				this.raza = {id: 3, nombre:'Elfo', mov: 12};
+			break;
+			default:
+				this.raza = {id: 2, nombre:'Humano', mov: 12};
+		}
+		var tmp =  prompt("Clase [0: Guerrero, 1: Hechicero, 2: Bribon]", "");
+		switch(parseInt(tmp)){
+			case 0:
+				this.clase = {id: 0, nombre:'Guerrero', da: 8};
+			break;
+			case 1:
+				this.clase = {id: 1, nombre:'Hechicero', da: 4};
+			break;
+			case 2:
+				this.clase = {id: 2, nombre:'Bribon', da: 6};
+			break;
+			default:
+		}
+	}
 	this.talentos = [];
 	this.transfondos = prompt("Transfondos:", "");;
 	this.armas = [];
@@ -148,11 +168,9 @@ Jugador.prototype.setHabilidades = function(nombre){
 Jugador.prototype.pv = function(id){
 	//let obj = this;
 	if(this.tipo){
-		var nombreClase = this.clase.filter(cl => cl.id == this.claseId);
 		var cont = this.datos.filter(da => da.pref == 'CON');
-		//console.log(`${(nombreClase[0].da + cont[0].puntos)} (${nombreClase[0].da}DA + ${cont[0].puntos}CON)`);
-		//return `${(nombreClase[0].da + cont[0].puntos)} (${nombreClase[0].da}DA + ${cont[0].puntos}CON)`;
-		return (nombreClase[0].da + cont[0].puntos);
+		cont =  cont[0].puntos;
+		return (cont + this.clase.da);
 	}else{
 		return this.vida;
 	}

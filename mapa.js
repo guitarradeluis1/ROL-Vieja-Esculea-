@@ -241,10 +241,6 @@ var obj = {
 		var div = document.getElementById('datosJugador');
 		var data = jugadores.filter(j=> j.id == id);
 		data = data[0];
-		if(tipo){
-			var nombreRaza = data.raza.filter(ra => ra.id == data.razaId);
-			var nombreClase = data.clase.filter(cl => cl.id == data.claseId);
-		}
 		var arayDatos = [];
 		data.datos.map(ha=>{
 			arayDatos[ha.pref] = ha.puntos;
@@ -256,8 +252,8 @@ var obj = {
 					Nombre: <b>${data.personaje}</b> (${data.nombre})</b><br/>`;
 		if(tipo){
 			html += `
-					Raza: <b>${nombreRaza[0].nombre} (MOV ${nombreRaza[0].mov})</b><br/>
-					Clase: <b>${nombreClase[0].nombre} (DA ${nombreClase[0].da})</b><br/>`;
+					Raza: <b>${data.raza.nombre} (MOV ${data.raza.mov})</b><br/>
+					Clase: <b>${data.clase.nombre} (DA ${data.clase.da})</b><br/>`;
 		}else{
 			html += `PV: <b>${data.vida})</b><br/>`;
 
@@ -274,7 +270,7 @@ var obj = {
 				<td>
 					<b>Puntos:</b><br/>
 					<ol id="detallesDatos">
-						<li><b>PV</b> ${(nombreClase[0].da + arayDatos['CON'])} (${nombreClase[0].da}DA + ${arayDatos['CON']}CON)</li>
+						<li><b>PV</b> ${(data.clase.da + arayDatos['CON'])} (${data.clase.da}DA + ${arayDatos['CON']}CON)</li>
 						<li><b>DEF</b> armadura + escudo + 10</li>
 						<li><b>MOV</b> DES x metro o pies</li>
 						<li><b>ATQ (cuerpo)</b> t. nivel + bono clase + ${arayDatos['FUE']}FUE</li>
