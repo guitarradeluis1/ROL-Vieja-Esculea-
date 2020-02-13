@@ -15,7 +15,7 @@ var Contador = function(tipo){
 	this.maximo = 0;
 	this.minimo = 0;
 	this.limite = false;
-	if (confirm(`El contador se limitara a un maximo yun minimo`)) {
+	if (confirm(`El contador se limitar a un maximo y un minimo`)) {
 		this.limite	= true;
 		var tmp = prompt(`Maximo`, ``);
 		this.maximo = parseInt(tmp);
