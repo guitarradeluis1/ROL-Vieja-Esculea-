@@ -12,10 +12,17 @@ var Contador = function(tipo){
 	this.live = true;
 	this.contador = 0;
 	this.nombre = prompt("Nombre :", "");
-	/*var tmp = prompt(`Maximo`, ``);
-	this.maximo = parseInt(tmp);
-	var tmp = prompt(`Minimo`, ``);
-	this.minimo = parseInt(tmp);*/
+	this.maximo = 0;
+	this.minimo = 0;
+	this.limite = false;
+	if (confirm(`El contador se limitara a un maximo yun minimo`)) {
+		this.limite	= true;
+		var tmp = prompt(`Maximo`, ``);
+		this.maximo = parseInt(tmp);
+		var tmp = prompt(`Minimo`, ``);
+		this.minimo = parseInt(tmp);
+		this.contador = this.minimo;
+	}
 	this.place = '';
 };
 
@@ -47,7 +54,11 @@ Contador.prototype.paint = function(nuevo){
 	var div = document.createElement('div');
 	div.setAttribute('id', this.id);
 	var span = document.createElement('span');
-	span.innerHTML = `${this.nombre} : <b>${this.contador}</b> `;
+	if(this.limite){
+		span.innerHTML = `${this.nombre} : <b>${this.contador} / ${this.maximo}</b> `;
+	}else{
+		span.innerHTML = `${this.nombre} : <b>${this.contador}</b> `;
+	}
 	div.appendChild(span);
 	var bm = document.createElement('span');
 	bm.innerHTML = `| + `
@@ -69,13 +80,25 @@ Contador.prototype.paint = function(nuevo){
 
 Contador.prototype.mas = function(){
 	let obj = this;
-	this.contador = this.contador + 1;
+	if(this.limite){
+		if(this.contador < this.maximo){
+			this.contador = this.contador + 1;
+		}
+	}else{
+		this.contador = this.contador + 1;
+	}
 	obj.paint();
 }
 
 Contador.prototype.menos = function(){
 	let obj = this;
-	this.contador = this.contador - 1;
+	if(this.limite){
+		if(this.contador > this.minimo){
+			this.contador = this.contador - 1;
+		}
+	}else{
+		this.contador = this.contador - 1;
+	}
 	obj.paint();
 }
 
