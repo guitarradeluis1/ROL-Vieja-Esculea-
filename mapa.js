@@ -483,6 +483,7 @@ var obj = {
 						dia.noche = false;
 					}else{
 						dia.noche = true;
+						dia.mint = 0;
 					}
 				}else{
 					dia.numero = parseInt(dia.numero) + 1;
