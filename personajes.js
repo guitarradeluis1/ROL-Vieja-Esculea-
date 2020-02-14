@@ -114,9 +114,8 @@ Jugador.prototype.setVida = function(){
 /**
  * @description Cambia transfondo
  */
-Jugador.prototype.setTransfondos = function(){
-	var tmp = prompt(`Transfondos`, `${this.transfondos}`);
-	this.transfondos = tmp;
+Jugador.prototype.setTransfondos = function(tr){
+	this.transfondos = tr;
 }
 
 /**

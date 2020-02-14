@@ -284,7 +284,10 @@ var obj = {
 				</td>
 		</tr>
 		<tr>
-			<td colspan="5" ><b>Transfondo:</b> ${data.transfondos}</td>
+			<td colspan="5" >
+				<b>Transfondo:</b><br/>
+				<textarea rows="10" cols="50" id="transfondos">${data.transfondos}</textarea>
+			</td>
 		</tr>`;
 		html += `</table>`;
 		div.innerHTML = html;
@@ -330,16 +333,9 @@ var obj = {
 			listNpc();
 		};
 		detalleJugador.appendChild(vida);
-		var editTransfondo = document.createElement('span');
-		editTransfondo.innerHTML = "<b>Transfondos</b> |";
-		editTransfondo.style.cursor = "pointer";
-		editTransfondo.onclick = function(){
-			data.setTransfondos();
-			painData(id);
-			list();
-			listNpc();
+		document.getElementById('transfondos').onkeyup = function(){
+			data.setTransfondos( document.getElementById('transfondos').value );
 		};
-		detalleJugador.appendChild(editTransfondo);
 		var arma = document.createElement('span');
 		arma.innerHTML = "<b>+Arma</b> |";
 		arma.style.cursor = "pointer";
