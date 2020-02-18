@@ -60,19 +60,19 @@ Contador.prototype.paint = function(nuevo){
 		span.innerHTML = `${this.nombre} : <b>${this.contador}</b> `;
 	}
 	div.appendChild(span);
-	var bm = document.createElement('span');
-	bm.innerHTML = `| + `
-	bm.style.cursor = 'pointer';
+	var bm = document.createElement('button');
+	bm.className = 'button1';
+	bm.innerHTML = `+`;
 	bm.onclick = function(){ obj.mas(); }
 	div.appendChild(bm);
-	var bme = document.createElement('span');
-	bme.innerHTML = `| - `
-	bme.style.cursor = 'pointer';
+	var bme = document.createElement('button');
+	bme.className = 'button2';
+	bme.innerHTML = `-`;
 	bme.onclick = function(){ obj.menos(); }
 	div.appendChild(bme);
-	var elim = document.createElement('span');
-	elim.innerHTML = `| Eliminar `
-	elim.style.cursor = 'pointer';
+	var elim = document.createElement('button');
+	elim.className = 'button3';
+	elim.innerHTML = `Eliminar`;
 	elim.onclick = function(){ obj.eliminar(); }
 	div.appendChild(elim);
 	place.appendChild(div);

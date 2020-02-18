@@ -11,74 +11,24 @@ Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo
 var Jugador = function(tipo){
 	this.id = ((new Date()).getTime() * parseInt((Math.random()*1000)));
 	this.live = true;
+	this.select = false;
 	this.x = 20;
 	this.y = 20;
 	this.oro = 0;
+	this.exp = 0;
+	this.nivel = 1;
+	this.nombre = 'pending';
+	this.personaje = 'pending';
+	this.color =  tipo?"#818181":'red'; //ingles
 	this.jugador = tipo;
-	this.nombre = tipo? prompt("Personaje:", ""): '';
-	this.personaje = prompt("Nombre:", "");
-	this.nivel = 0;
-	this.experiencia = 0;
 	this.raza = {};
-	if(tipo){
-		var tmp =  prompt("Raza [0: Enano, 1: Mediano, 2: Humano, 3: Elfo]", "");
-		switch(parseInt(tmp)){
-			case 0:
-				this.raza = {id: 0, nombre:'Enano', mov: 9};
-			break;
-			case 1:
-				this.raza = {id: 1, nombre:'Mediano', mov: 9};
-			break;
-			case 2:
-				this.raza = {id: 2, nombre:'Humano', mov: 12};
-			break;
-			case 3:
-				this.raza = {id: 3, nombre:'Elfo', mov: 12};
-			break;
-			default:
-				this.raza = {id: 2, nombre:'Humano', mov: 12};
-		}
-		var tmp =  prompt("Clase [0: Guerrero, 1: Hechicero, 2: Bribon]", "");
-		switch(parseInt(tmp)){
-			case 0:
-				this.clase = {id: 0, nombre:'Guerrero', da: 8};
-			break;
-			case 1:
-				this.clase = {id: 1, nombre:'Hechicero', da: 4};
-			break;
-			case 2:
-				this.clase = {id: 2, nombre:'Bribon', da: 6};
-			break;
-			default:
-		}
-	}
-	this.talentos = [];
-	this.transfondos = prompt("Transfondos:", "");;
-	this.armas = [];
-	this.habilidades = [
-		{nombre:'Alerta', puntos: 0},
-		{nombre:'Comunicacion', puntos: 0},
-		{nombre:'Manipulacion', puntos: 0},
-		{nombre:'Erudicion', puntos: 0},
-		{nombre:'Subterfugio', puntos: 0},
-		{nombre:'Supervivencia', puntos: 0},
-	];
-	this.datos = [
-		{nombre:'Fuerza', pref:'FU', puntos: 0},
-		{nombre:'Destreza', pref:'DES', puntos: 0},
-		{nombre:'Constitucion', pref:'CON', puntos: 0},
-		{nombre:'Inteligencia', pref:'INT', puntos: 0},
-		{nombre:'Sabiduria', pref:'SAB', puntos: 3},
-		{nombre:'Carisma', pref:'CAR', puntos: 0},
-	];
-	//this.imagen = prompt("Imagen:", "");
-	this.color =  "";//prompt("Color (ingles):", "");
-	this.vida = tipo? '':prompt("Vida :", "");
+	this.clase = {};
+	this.habilidades = publictHabilidades;
+	this.datos = publictDatos;
+	this.armas = [/*id, nombe, cantidad, puntos, tipo(armas, equipmiento, talentos)*/];
+	this.transfondos =  '';
 };
 
-/**
- * @description Desavilitar personaje
- */
 Jugador.prototype.eliminar = function(){
 	if (confirm(`Seguro quiere eliminar a ${this.personaje}`)) {
 		this.live = false;
@@ -86,180 +36,477 @@ Jugador.prototype.eliminar = function(){
 	}
 }
 
-/**
- * @description Cambia cantidad de oro
- */
-Jugador.prototype.setOro = function(){
-	var tmp = prompt(`Oro (${this.oro})`, `${this.oro}`);
-	this.oro = parseInt(tmp);
-}
-
-/**
- * @description Cambia color
- */
-Jugador.prototype.setColor = function(co){
-	if (confirm("Seguro quieres cambiar el color?")) {
-		this.color = co;
-	}
-}
-
-/**
- * @description Cambia color
- */
-Jugador.prototype.setVida = function(){
-	var tmp = prompt(`Vida (${this.vida})`, `${this.vida}`);
-	this.vida = parseInt(tmp);
-}
-
-/**
- * @description Cambia transfondo
- */
-Jugador.prototype.setTransfondos = function(tr){
-	this.transfondos = tr;
-}
-
-/**
- * @description Cambia cantidad de experiencia y suvida de niles (10 = + 1NV)
- */
-Jugador.prototype.setExp = function(){
-	var tmp = prompt(`NV/Exp (${this.nivel}/${this.experiencia})`, ``);
-	this.experiencia = this.experiencia + parseInt(tmp);
-	if(this.experiencia >= 10){
-		this.experiencia = this.experiencia - 10;
-		this.nivel = this.nivel + 1;
-		alert(`<b>${this.personaje}</b> subió al nivel ${this.nivel}`);
-	}
-}
-
-/**
- * @description Cambia la posicion que ubica (canvas)
- * @param {float} x
- * @param {float} y
- */
-Jugador.prototype.setPosition = function(x, y){
-	//var tmp = prompt(`X:`, `${this.x}`);
-	this.x = parseFloat(x);
-	//var tmp = prompt(`Y:`, `${this.y}`);
-	this.y = parseFloat(y);
-}
-
-/**
- * @description Cambia datos acorde a su nombre
- * @param {string} nombre
- */
-Jugador.prototype.setDatos = function(nombre){
-	this.datos.map(ha=>{
-		if(ha.nombre == nombre){
-			var tmp = prompt(`${ha.nombre}`, `${ha.puntos}`);
-			ha.puntos = parseInt(tmp);
-		}
-	});
-}
-
-/**
- * @description Cambia habilidad acorde a su nombre
- * @param {string} nombre
- */
-Jugador.prototype.setHabilidades = function(nombre){
-	this.habilidades.map(ha=>{
-		if(ha.nombre == nombre){
-			var tmp = prompt(`${ha.nombre}`, `${ha.puntos}`);
-			ha.puntos = parseInt(tmp);
-		}
-	});
-}
-
-/**
- * @returns {number} vida PV
- */
-Jugador.prototype.pv = function(id){
-	//let obj = this;
-	if(this.tipo){
-		var cont = this.datos.filter(da => da.pref == 'CON');
-		cont =  cont[0].puntos;
-		return (cont + this.clase.da);
+Jugador.prototype.ficha = function(lugar, show){
+	var per = this;
+	var divsupremo = document.createElement('div');
+	divsupremo.style.display = 'flex';
+	divsupremo.style.flexFlow = 'row wrap';
+	var div = document.createElement('div');
+	div.appendChild( this.createInput(`ti${per.id}`, `<h2>${this.personaje}</h2>`, `${lugar}`, 'personaje' ) );
+	div.appendChild( this.createInput(`no${per.id}`, `${this.nombre}`, `${lugar}`, 'nombre' ) );
+	div.appendChild( document.createElement('br') );
+	div.appendChild( this.createInput(`go${per.id}`, ` Gold: <b>${this.oro}</b> `, `${lugar}`, 'gold' ) );
+	div.appendChild( this.createInput(`nv${per.id}`, ` Level: <b>${this.nivel}</b> `, `${lugar}`, 'nivel' ) );
+	div.appendChild( this.createInput(`exp${per.id}`, ` Exp: <b>${this.exp}</b> `, `${lugar}`, 'exp' ) );
+	div.appendChild( document.createElement('br') );
+	div.appendChild( this.createInput(`color${per.id}`, ` <b>Color</b> `, `${lugar}`, 'color' ) );
+	div.appendChild( document.createElement('br') );
+	
+	var tClase = document.createElement('span');
+	tClase.setAttribute('id', `cl${per.id}`);
+	if(!this.clase.nombre){
+		tClase.innerHTML = `Class: `;
 	}else{
-		return this.vida;
+		tClase.innerHTML = `Class: <b>${per.clase.nombre} ${per.clase.icon}</b> `;
 	}
-}
+	div.appendChild(tClase);
+	var tRaza = document.createElement('span');
+	tRaza.setAttribute('id', `rc${per.id}`);
+	if(this.raza.hasOwnProperty('nombre')){
+		tRaza.innerHTML = `Race: <b>${per.raza.nombre}</b> `;
+	}else{
+		tRaza.innerHTML = `Race: `;
+	}
+	div.appendChild(tRaza);
+	if(this.clase.hasOwnProperty('id')){
+		publictTablaClasesNivel.map(tabla=>{
+			if(tabla.clase == this.clase.id && tabla.nivel == this.nivel){
+				var pm = document.createElement('p');
+				pm.innerHTML = `ATQ: <b>${tabla.atq}</b> POD: <b>${tabla.pod}</b> INS: <b>${tabla.ins}</b>`;
+				div.appendChild(pm);
+			}
+		});
+		var arayDatos = [];
+		this.datos.map(ha=>{
+			arayDatos[ha.pref] = ha.puntos;
+		});
+		var ol = document.createElement('div');
+		ol.innerHTML = `
+		<ul id="detallesDatos">
+			<li><b>PV</b> ${(this.clase.da + arayDatos['CON'])} (${this.clase.da}DA + ${arayDatos['CON']}CON)</li>
+			<li><b>DEF</b> armadura + escudo + 10</li>
+			<li><b>MOV</b> ${arayDatos['DES']}DES x metro o pies</li>
+			<li><b>ATQ (cuerpo)</b> t. nivel + bono clase + ${arayDatos['FUE']}FUE</li>
+			<li><b>ATQ (proyectil)</b> t. nivel + bono clase + ${arayDatos['DES']}DES</li>
+			<li><b>INST</b> t. nivel + bono clase</li>
+			<li><b>POD</b> t. nivel + ${arayDatos['INT']}INT</li>
+		</ul>`;
+		div.appendChild(ol);
+	}
 
-/**
- * @returns {number} movimiento MOV
- */
-Jugador.prototype.mov = function(id){
-	//let obj = this;
-	return this.id;
-}
-
-/**
- * @returns {number} defensa DEF
- */
-Jugador.prototype.def = function(id){
-	//let obj = this;
-	return this.id;
-}
-
-/**
- * @returns {number} ataque ATQ
- */
-Jugador.prototype.atq = function(id){
-	//let obj = this;
-	return this.id;
-}
-
-/**
- * @returns {number} instinto INS
- */
-Jugador.prototype.ins = function(id){
-	//let obj = this;
-	return this.id;
-}
-
-/**
- * @returns {number} poder POD
- */
-Jugador.prototype.pod = function(id){
-	//let obj = this;
-	return this.id;
-}
-
-Jugador.prototype.addArma = function(){
-	var nombre = prompt(`Nombre de la nueva Arma`, ``);
-	var puntos = prompt(`Puntaje (3, 2....)`, ``);
-	puntos = parseInt(puntos);
-	var peso = prompt(`Peso (3, 2....)`, ``);
-	peso = parseInt(peso);
-	var id = ((new Date()).getTime() * parseInt((Math.random()*1000)));
-	this.armas.push({id, nombre, puntos, peso});
-}
-
-Jugador.prototype.editArma = function(id){
-	var puntos = prompt(`Puntaje (3, 2....)`, ``);
-	puntos = parseInt(puntos);
-	var peso = prompt(`Peso (3, 2....)`, ``);
-	peso = parseInt(peso);
-	this.armas.filter(ar=>{
-		if(ar.id == id){
-			ar.puntos = puntos;
-			ar.peso = peso;
-		}
+	div.appendChild( document.createElement('br') );
+	div.appendChild( document.createElement('br') );
+	var addClase = document.createElement('button');
+	addClase.className = 'button1';
+	addClase.innerHTML = 'Add Class';
+	addClase.onclick = function(){ per.createselectClases(lugar, `cl${per.id}`); };
+	div.appendChild(addClase);
+	var addRaza = document.createElement('button');
+	addRaza.className = 'button1';
+	addRaza.innerHTML = 'Add Race';
+	addRaza.onclick = function(){ per.createselectRace(lugar, `rc${per.id}`); };
+	div.appendChild(addRaza);
+	div.appendChild( document.createElement('br') );
+	div.appendChild( document.createElement('br') );
+	var btnEliminar = document.createElement('button');
+	btnEliminar.className = 'button3';
+	btnEliminar.innerHTML = '&#x2671 Remove';
+	btnEliminar.onclick = function(){ per.eliminar(); };
+	div.appendChild(btnEliminar);
+	var fot = document.createElement('p');
+	fot.innerHTML = `${this.id}`;
+	div.appendChild(fot);
+	divsupremo.appendChild(div);
+	//----------------------------------
+	var divda = document.createElement('div');
+	divda.className = 'cudro';
+	var titulo = document.createElement('p');
+	titulo.innerHTML = `<h3>Data</h3>`
+	divda.appendChild(titulo);
+	per.datos.map(a=>{
+		var temp = document.createElement('span');
+		temp.setAttribute('id', `${a.pref}${per.id}`);
+		temp.innerHTML = `${a.pref}: <b>${a.puntos}</b>  `;
+		divda.appendChild(temp);
+		var sum = document.createElement('button');
+		sum.className = 'button1';
+		sum.innerHTML = '+';
+		sum.onclick = function(){
+			per.datos.some(ida=>{  
+				if(ida.pref == a.pref){
+					ida.puntos = ida.puntos + 1;
+					document.getElementById(`${a.pref}${per.id}`).innerHTML = `${a.pref}: <b>${a.puntos}</b>  `;
+				}
+			});
+		};
+		divda.appendChild(sum);
+		var men = document.createElement('button');
+		men.className = 'button2';
+		men.innerHTML = '-';
+		men.onclick = function(){
+			per.datos.some(ida=>{  
+				if(ida.pref == a.pref){
+					ida.puntos = ida.puntos - 1;
+					document.getElementById(`${a.pref}${per.id}`).innerHTML = `${a.pref}: <b>${a.puntos}</b>  `;
+				}
+			});
+		};
+		divda.appendChild(men);
+		divda.appendChild( document.createElement('br') );
 	});
+	divsupremo.appendChild(divda);
+	//----------------------------------
+	var divha = document.createElement('div');
+	divha.className = 'cudro';
+	var titulo = document.createElement('p');
+	titulo.innerHTML = `<h3>Skills</h3>`
+	divha.appendChild(titulo);
+	per.habilidades.map(a=>{
+		var temp = document.createElement('span');
+		temp.setAttribute('id', `${a.nombre}${per.id}`);
+		temp.innerHTML = `${a.nombre}: <b>${a.puntos}</b>  `;
+		divha.appendChild(temp);
+		var sum = document.createElement('button');
+		sum.className = 'button1';
+		sum.innerHTML = '+';
+		sum.onclick = function(){
+			per.habilidades.some(ida=>{  
+				if(ida.nombre == a.nombre){
+					ida.puntos = ida.puntos + 1;
+					document.getElementById(`${a.nombre}${per.id}`).innerHTML = `${a.nombre}: <b>${a.puntos}</b>  `;
+				}
+			});
+		};
+		divha.appendChild(sum);
+		var men = document.createElement('button');
+		men.className = 'button2';
+		men.innerHTML = '-';
+		men.onclick = function(){
+			per.habilidades.some(ida=>{  
+				if(ida.nombre == a.nombre){
+					ida.puntos = ida.puntos - 1;
+					document.getElementById(`${a.nombre}${per.id}`).innerHTML = `${a.nombre}: <b>${a.puntos}</b>  `;
+				}
+			});
+		};
+		divha.appendChild(men);
+		divha.appendChild( document.createElement('br') );
+	});
+	divsupremo.appendChild(divha);
+	//----------------------------------
+	var divar = document.createElement('div');
+	divar.className = 'cudro';
+	var titulo = document.createElement('p');
+	titulo.innerHTML = `<h3>Armor</h3>`;
+	divar.appendChild(titulo);
+	var divMini = document.createElement('div');
+	divMini.setAttribute('id', 'armas');
+	divar.appendChild(divMini);
+	divsupremo.appendChild(divar);
+	//----------------------------------
+	var divit = document.createElement('div');
+	divit.className = 'cudro';
+	var titulo = document.createElement('p');
+	titulo.innerHTML = `<h3>Items</h3>`
+	divit.appendChild(titulo);
+	var divMini = document.createElement('div');
+	divMini.setAttribute('id', 'equipamiento');
+	divit.appendChild(divMini);
+	divsupremo.appendChild(divit);
+	//----------------------------------
+	var diveq = document.createElement('div');
+	diveq.className = 'cudro';
+	var titulo = document.createElement('p');
+	titulo.innerHTML = `<h3>Talents</h3>`
+	diveq.appendChild(titulo);
+	var divMini = document.createElement('div');
+	divMini.setAttribute('id', 'talents');
+	diveq.appendChild(divMini);
+	divsupremo.appendChild(diveq);
+	//----------------------------------
+	var text = document.createElement('textarea');
+	text.rows = "4";
+	text.cols = "50";
+	text.value = this.transfondos;
+	text.onchange = function(){
+		per.transfondos = text.value;
+	};
+	divsupremo.appendChild(text);
+	//----------------------------------
+	var fin = document.getElementById(show);
+	fin.appendChild(divsupremo);
+	per.pintarList('armas', per.armas, 'armas');
+	divar.appendChild( per.pintarBtnSave('armas', 'armas') );
+	per.pintarList('equipamiento', per.armas, 'equipamiento');
+	divit.appendChild( per.pintarBtnSave('equipamiento', 'equipamiento') );
+	per.pintarList('talents', per.armas, 'talents');
+	diveq.appendChild( per.pintarBtnSave('talents', 'talents') );
 }
 
-Jugador.prototype.deleteArma = function(id){
-	if (confirm("Seguro quieres eliminar el arma?")) {
-		this.armas = this.armas.filter(ar => ar.id !== id);
+Jugador.prototype.createInput = function(id, texto, lugar, campo){
+	var per = this;
+	var general = document.createElement('span');
+	general.innerHTML = texto;
+	general.setAttribute( 'id', id);
+	general.onclick = function(){ per.edicion(`${lugar}`, campo, id) };
+	general.style.cursor = "pointer";
+	if(campo == 'color'){
+		general.style.color = per.color;
+	}
+	return general;
+}
+
+Jugador.prototype.edicion = function(lugar, atributo, idChange){
+	var per = this;
+	var div = document.getElementById(`${lugar}`);
+	div.innerHTML = ``;
+	switch(atributo){
+		case 'personaje':
+			var input = document.createElement('input');
+			input.setAttribute('type', 'search');
+			input.value = this.personaje;
+			input.onkeyup = function(){ 
+				per.personaje = input.value; 
+				document.getElementById(idChange).innerHTML = `<h2>${input.value}</h2>`;
+			};
+			div.appendChild(input);
+		break;
+		case 'nombre':
+			var input = document.createElement('input');
+			input.setAttribute('type', 'search');
+			input.value = this.nombre;
+			input.onkeyup = function(){ 
+				per.nombre = input.value; 
+				document.getElementById(idChange).innerHTML = `${input.value}`;
+			};
+			div.appendChild(input);
+		break;
+		case 'gold':
+			var input = document.createElement('input');
+			input.value = this.oro;
+			input.setAttribute('type', 'number');
+			input.onkeyup = function(){
+				per.oro = input.value; 
+				document.getElementById(idChange).innerHTML = `Gold: <b>${input.value}</b> `;
+			};
+			div.appendChild(input);
+		break;
+		case 'exp':
+			var input = document.createElement('input');
+			input.value = this.exp;
+			input.setAttribute('type', 'number');
+			input.onkeyup = function(){
+				per.exp = input.value; 
+				document.getElementById(idChange).innerHTML = `Exp: <b>${input.value}</b> `;
+			};
+			div.appendChild(input);
+		break;
+		case 'nivel':
+			var input = document.createElement('input');
+			input.value = this.nivel;
+			input.setAttribute('type', 'number');
+			input.onkeyup = function(){
+				per.nivel = input.value; 
+				document.getElementById(idChange).innerHTML = `Level: <b>${input.value}</b> `;
+			};
+			div.appendChild(input);
+		break;
+		case 'color':
+			var input = document.createElement('input');
+			input.value = this.color;
+			input.setAttribute('type', 'color');
+			input.onchange = function(){
+				per.color = input.value; 
+				document.getElementById(idChange).innerHTML = `<b>Color</b>`;
+				document.getElementById(idChange).style.color = input.value;
+			};
+			div.appendChild(input);
+		break;
+		default:
+			var p = document.createElement('span');
+			p.innerHTML = `Error 0.1`;
+			div.appendChild(p);
+	}
+	var cancel = document.createElement('button');
+	cancel.className = 'button3';
+	cancel.innerHTML = 'Cancel';
+	cancel.onclick = function(){ per.cancelEdicion(lugar); };
+	div.appendChild(cancel);
+}
+
+Jugador.prototype.cancelEdicion = function(lugar){
+	var del = document.getElementById(lugar);
+	del.innerHTML = '';
+	//del.parentNode.removeChild(del);
+}
+
+Jugador.prototype.createselectClases = function(lugar, id){
+	var per = this;
+	var div = document.getElementById(`${lugar}`);
+	div.innerHTML = ``;
+	var select = document.createElement('select');
+	var opt = document.createElement('option');
+	opt.setAttribute('value', '');
+	opt.setAttribute('selected', 'selected');
+	select.appendChild(opt);
+	publictClases.map(cla=>{
+		var opt = document.createElement('option');
+		opt.setAttribute('value', cla.id);
+		//opt.setAttribute('selected', 'selected');
+		opt.appendChild( document.createTextNode( cla.nombre ) );
+		select.appendChild(opt);
+	});
+	select.onchange = function(){
+		var claseSelecion = publictClases.filter(se=>se.id == select.value);
+		per.clase = claseSelecion[0];
+		var show = document.getElementById(id);
+		show.innerHTML = `Class : <b>${per.clase.nombre}</b> `
+	};
+	div.appendChild(select);
+	var cancel = document.createElement('button');
+	cancel.className = 'button3';
+	cancel.innerHTML = 'Cancel';
+	cancel.onclick = function(){ per.cancelEdicion(lugar); };
+	div.appendChild(cancel);
+}
+
+Jugador.prototype.createselectRace = function(lugar, id){
+	var per = this;
+	var div = document.getElementById(`${lugar}`);
+	div.innerHTML = ``;
+	var select = document.createElement('select');
+	var opt = document.createElement('option');
+	opt.setAttribute('value', '');
+	opt.setAttribute('selected', 'selected');
+	select.appendChild(opt);
+	publictRaza.map(cla=>{
+		var opt = document.createElement('option');
+		opt.setAttribute('value', cla.id);
+		//opt.setAttribute('selected', 'selected');
+		opt.appendChild( document.createTextNode( cla.nombre ) );
+		select.appendChild(opt);
+	});
+	select.onchange = function(){
+		var raceSelecion = publictRaza.filter(se=>se.id == select.value);
+		per.raza = raceSelecion[0];
+		var show = document.getElementById(id);
+		show.innerHTML = `Race : <b>${per.raza.nombre}</b> `
+	};
+	div.appendChild(select);
+	var cancel = document.createElement('button');
+	cancel.className = 'button3';
+	cancel.innerHTML = 'Cancel';
+	cancel.onclick = function(){ per.cancelEdicion(lugar); };
+	div.appendChild(cancel);
+}
+
+Jugador.prototype.fromObjetos = function(){
+	//id, nombe, cantidad, puntos
+	var div = document.createElement('div');
+	var t1 = document.createElement('span');
+	t1.appendChild( document.createTextNode('Name: ') );
+	div.appendChild(t1);
+	var i1 = document.createElement('input');
+	i1.setAttribute('id', 'i1');
+	div.appendChild(i1);
+	var t2 = document.createElement('span');
+	t2.appendChild( document.createTextNode('Quantity: ') );
+	div.appendChild(t2);
+	var i2 = document.createElement('input');
+	i2.setAttribute('id', 'i2');
+	i2.setAttribute('type', 'number');
+	div.appendChild(i2);
+	div.appendChild( document.createElement('br') );
+	var t3 = document.createElement('span');
+	t3.appendChild( document.createTextNode('Points: ') );
+	div.appendChild(t3);
+	var i3 = document.createElement('input');
+	i3.setAttribute('id', 'i3');
+	i3.setAttribute('type', 'text');
+	div.appendChild(i3);
+	return div;
+}
+
+Jugador.prototype.pintarList = function(lugar, data, armas){
+	//id, nombe, cantidad, puntos, tipo
+	if(lugar){
+		if(data.length >= 0){
+			var per = this;
+			var container = document.getElementById(lugar);
+			container.innerHTML = '';
+			var total = 0;
+			data.map( da=>{
+				if(da.tipo == armas){
+					var tmp = document.createElement('span');
+					tmp.innerHTML = `${da.nombre} (${da.cantidad}): <b>${da.puntos}</b>  `;
+					tmp.style.cursor = "pointer";
+					tmp.onclick = function(){
+						var form = per.fromObjetos();
+						document.getElementById(lugar).appendChild(form);
+						//document.getElementById('i1').setAttribute('disable', 'disable');
+						document.getElementById('i1').value = da.nombre;
+						document.getElementById('i2').value = da.cantidad;
+						document.getElementById('i3').value = da.puntos;
+						var btnadd = document.createElement('button');
+						btnadd.className = 'button1';
+						btnadd.innerHTML = 'save';
+						btnadd.onclick = function(){
+							per.armas.map(ar=>{
+								if(ar.id == da.id){
+									ar.nombre = document.getElementById('i1').value;
+									ar.cantidad = document.getElementById('i2').value;
+									ar.puntos = document.getElementById('i3').value;
+								}
+							});
+							document.getElementById(lugar).innerHTML = '';
+							per.pintarList(lugar, per.armas, armas);
+						}
+						document.getElementById(lugar).appendChild(btnadd);
+					};
+					container.appendChild(tmp);
+					var cancel = document.createElement('button');
+					cancel.className = 'button3';
+					cancel.innerHTML = '&#x2671';
+					cancel.onclick = function(){ 
+						per.armas = per.armas.filter(ar=> ar.id !== da.id);
+						per.pintarList(lugar, per.armas, armas);
+					};
+					container.appendChild(cancel);
+					container.appendChild( document.createElement('br') );
+					total = total + parseInt(da.cantidad);
+				}
+			});
+			var tmp = document.createElement('p');
+			tmp.innerHTML = `<b>Total: ${total}</b>`;
+			container.appendChild(tmp);
+		}
 	}
 }
 
-
-//var opcion = prompt("Introduzca su nombre:", "Aner Barrena")
-/*
-var txt;
-  if (confirm("Press a button!")) {
-    txt = "You pressed OK!";
-  } else {
-    txt = "You pressed Cancel!";
-  }
-  document.getElementById("demo").innerHTML = txt;
-}*/
+Jugador.prototype.pintarBtnSave= function(text, lugar){
+	var per = this;
+	var btnadd = document.createElement('button');
+	btnadd.className = 'button1';
+	btnadd.innerHTML = 'add';
+	btnadd.onclick = function(){
+		var place = document.getElementById(lugar);
+		var form = per.fromObjetos();
+		place.appendChild(form);
+		var btn = document.createElement('button');
+		btn.className = 'button1';
+		btn.innerHTML = 'save';
+		btn.onclick = function(){
+			per.armas.push({
+				id: ((new Date()).getTime() * parseInt((Math.random()*1000))),
+				nombre: document.getElementById('i1').value,
+				cantidad: document.getElementById('i2').value,
+				puntos: document.getElementById('i3').value,
+				tipo: text
+			});
+			place.innerHTML = '';
+			per.pintarList(text, per.armas, text);
+		};
+		place.appendChild(btn);
+	};
+	return btnadd;
+}

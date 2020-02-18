@@ -5,91 +5,220 @@ Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo
 window.onload = function() {
 	console.log('Credo por Luis Bernal (guitarradeluis@gmail.com)');
 	console.log('Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo');
-	document.getElementById('btn_new').onclick = function(){ obj.newJugador(); };
-	document.getElementById('btn_ene').onclick = function(){ obj.newEnemigo(); };
-	document.getElementById('btn_size').onclick = function(){ obj.chaengeSizeGamers(); };
-	document.getElementById('btn_tiempo').onclick = function(){ obj.setTiempo(); };
-	document.getElementById('btn_cotexto').onclick = function(){ obj.setColorTexto(); };
-	document.getElementById('btn_cuadros').onclick = function(){ obj.chaengeCuadricula(); };
-	document.getElementById('btn_contador').onclick = function(){ obj.contador(); };
-	document.getElementById('btn_mapa').onclick = function(){ obj.toogleMapa(); };
-	document.getElementById('btn_tablas').onclick = function(){ obj.toogleTabla(); };
+	//document.getElementById('btn_tablas').onclick = function(){ obj.toogleTabla(); };
+	//document.getElementById('calculadora').onkeyup = function(){ obj.calculadora(); };
+	//obj.start(); obj.jugadores.map(v=>{ console.log( JSON.stringify(v) ); });
 	document.getElementById('calculadora').onkeyup = function(){ obj.calculadora(); };
-	obj.start();
+	document.getElementById('mapSizeWidth').value = obj.sizeWidth;
+	document.getElementById('mapSizeWidth').onkeyup = function(){ obj.sizeWidth = this.value; obj.paintMap(); };
+	document.getElementById('mapSizeHeight').value = obj.sizeHeight;
+	document.getElementById('mapSizeHeight').onkeyup = function(){ obj.sizeHeight = this.value; obj.paintMap(); };
+	document.getElementById('mapSizeGamers').value = obj.sizeGamers;
+	document.getElementById('mapSizeGamers').onkeyup = function(){ obj.sizeGamers = this.value; obj.paintMap(); };
+	document.getElementById('mapcolor').value = obj.cuadricula.color;
+	document.getElementById('mapcolor').onchange = function(){ obj.cuadricula.color = this.value; obj.paintMap(); };
+	document.getElementById('mapSeparacion').value = obj.cuadricula.separacion;
+	document.getElementById('mapSeparacion').onkeyup = function(){ obj.cuadricula.separacion = this.value; obj.paintMap(); };
+	document.getElementById('mapGlosorn').value = obj.cuadricula.grosor;
+	document.getElementById('mapGlosorn').onkeyup = function(){ obj.cuadricula.grosor = this.value; obj.paintMap(); };
+	document.getElementById('mapText').value = obj.sizeText;
+	document.getElementById('mapText').onkeyup = function(){ obj.sizeText = this.value; obj.paintMap(); };
+	document.getElementById('mapImagen').onchange = function(){ obj.paintMap(); };
+	openNav();
 };
+function openNav(){
+	document.getElementById("mySidenav").style.width = "250px";
+	document.getElementById("main").style.marginLeft = "250px";
+}
+function closeNav() {
+	document.getElementById("mySidenav").style.width = "0";
+	document.getElementById("main").style.marginLeft= "0";
+}
 var obj = {
-	show: true,
-	canvas: 0,
-	ctx: 0,
+	jugadores: [],
+	enemigos: [],
 	sizeWidth: 600,
 	sizeHeight: 400,
 	sizeGamers: 20,
-	sizeText: 25,
-	centerx: 0,
-	centery: 0,
-	jugadores: [],
-	npc: [],
-	selecion: 0,
-	tempPosicion: {x:20 , y:20},
-	intervalo: setInterval( function(){ obj.paintTime(); }, 1000),
-	dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
-	color: 'black',
 	cuadricula: {separacion: 40, color: 'white', grosor: 2},
+	selectorMap: 0,
+	sizeText: 30,
+	dia: {desc: '', numero: 0, play: false, minutos: 2, division: false, noche: false, seg: 0, mint: 0},
+	intervalo: setInterval( function(){ obj.paintTime(); }, 1000),
 	calculadora: ()=>{
 		try{
 			var text = document.getElementById('calculadora').value;
-			document.getElementById('resultado').innerHTML = eval(text);
-		} catch(error){
+			document.getElementById('resultado').innerHTML = "<b> = "+eval(text)+"</b>";
+		} catch(error){}
+	},
+	showDiv: show=>{
+		var clases = document.getElementsByClassName('cuadro');
+		for (var i = 0; i < clases.length; i++){
+			clases[i].classList.remove("esconder");
+			clases[i].classList.add("esconder");
 		}
+		document.getElementById(`${show}`).classList.toggle('esconder');
 	},
-	toogleMapa:()=>{
-		var { show, sizeWidth, sizeHeight } = obj;
-		var divCanvas = document.getElementById('divCanvas');
-		var canvas = document.getElementById('canvas');
-		if(show){
-			divCanvas.style.display = 'none';
-			divCanvas.style.width = '0px';
-			divCanvas.style.height = '0px';
-			obj.show = false;
-		}else{
-			divCanvas.style.display = '';
-			divCanvas.style.width = `${sizeWidth}px`;
-			divCanvas.style.height = `${sizeHeight}px`;
-			obj.show = true; 
+	showDivData: show=>{
+		var clases = document.getElementsByClassName('cuadroData');
+		for (var i = 0; i < clases.length; i++){
+			clases[i].classList.remove("esconder");
+			clases[i].classList.add("esconder");
 		}
-		obj.reload();
+		document.getElementById(`${show}`).classList.toggle('esconder');
 	},
-	toogleTabla: ()=>{
-		document.getElementById('divTablas').classList.toggle('esconder');
+	newCharacter: ()=>{
+		var { jugadores, listcharacters } = obj;
+		var jugador = new Jugador(true);
+		jugadores.push(jugador);
+		listcharacters();
+		openNav();
 	},
-	start: ()=>{
-		const { sizeWidth, sizeHeight, getMousePos, tempPosicion } = obj;
-		var divCanvas = document.getElementById("divCanvas");
+	listcharacters: ()=>{
+		var { jugadores, seleccion, listWorldGamers } = obj;
+		var container = document.getElementById('lischaracters');
+		container.innerHTML = "";
+		document.getElementById('changeCharacter').innerHTML = '';
+		jugadores.map(j=>{
+			if(j.live){
+				if(j.jugador){
+					var a = document.createElement("a");
+					a.onclick = function(){ seleccion(j.id); };
+					a.setAttribute("href", "#");
+					if(j.select){
+						a.innerHTML = `&#x265B; ${j.personaje}`;
+					}else{
+						a.innerHTML = `${j.personaje}`;
+					}
+					a.style.color = `${j.color}`;
+					a.style.cursor = "pointer";
+					container.appendChild(a);
+				}
+			}
+		});
+		listWorldGamers();
+	},
+	seleccion: id=>{
+		var { jugadores, listcharacters } = obj;
+		var container = document.getElementById('detailSheet');
+		container.innerHTML = '';
+		jugadores.map(j=>{
+			j.select = false;
+			if(j.id == id){
+				j.select = true;
+				j.ficha('changeCharacter', 'detailSheet');
+			}
+		});
+		listcharacters();
+	},
+	reload: ()=>{
+		var { listcharacters } = obj;
+		listcharacters();
+	},
+	newCharacterEnemy: ()=>{
+		var { enemigos, listcharactersEnemy } = obj;
+		var jugador = new Jugador(false);
+		enemigos.push(jugador);
+		listcharactersEnemy();
+	},
+	listcharactersEnemy: ()=>{
+		var { enemigos, seleccionEnemy, listWorldGamers } = obj;
+		var container = document.getElementById('lischaractersEnemy');
+		container.innerHTML = "";
+		document.getElementById('changeCharacterEnemy').innerHTML = '';
+		enemigos.map(j=>{
+			if(j.live){
+				if(!j.jugador){
+					var a = document.createElement("a");
+					a.onclick = function(){ seleccionEnemy(j.id); };
+					a.setAttribute("href", "#");
+					if(j.select){
+						a.innerHTML = `&#x265B; ${j.personaje}`;
+					}else{
+						a.innerHTML = `${j.personaje}`;
+					}
+					a.style.color = `${j.color}`;
+					a.style.cursor = "pointer";
+					container.appendChild(a);
+					container.appendChild( document.createElement('hr') );
+				}
+			}
+		});
+		listWorldGamers();
+	},
+	seleccionEnemy: id=>{
+		var { enemigos, listcharactersEnemy } = obj;
+		var container = document.getElementById('detailSheetEnemy');
+		container.innerHTML = '';
+		enemigos.map(j=>{
+			j.select = false;
+			if(j.id == id){
+				j.select = true;
+				j.ficha('changeCharacterEnemy', 'detailSheetEnemy');
+			}
+		});
+		listcharactersEnemy();
+	},
+	paintMap: ()=>{
+		const { sizeWidth, sizeHeight, getMousePos, jugadores, enemigos, cuadricula, sizeGamers, sizeText } = obj;
+		var divCanvas = document.getElementById("world");
 		divCanvas.style.width = `${sizeWidth}px`;
 		divCanvas.style.height = `${sizeHeight}px`;
 		var canvasHtml = `<canvas id="canvas" width="${sizeWidth}" height="${sizeHeight}">Tu navegador no soporta html5...</canvas>`;
 		divCanvas.innerHTML = canvasHtml;
 		obj.canvas = document.getElementById("canvas");
 		canvas.ctx = obj.canvas.getContext("2d");
-		canvas.addEventListener('click', function(evt) {
+		canvas.addEventListener('click', function(evt){
 			var mousePos = getMousePos(canvas, evt);
-			tempPosicion.x = mousePos.x;
-			tempPosicion.y = mousePos.y;
 			document.getElementById("posicionEjemplo").innerHTML = `${mousePos.x}, ${mousePos.y}`;
-			/*
-			var uno = true;
-			jugadores.map(j=>{
-				if(j.id = obj.selecion){
-					if(uno){
-						j.setPosition(mousePos.x, mousePos.y);
-						console.log(j.id);
-						uno = false;
-						reload();
-					}
-				}
-			});*/
+			obj.changePlace(mousePos.x, mousePos.y);
+			obj.listWorldGamers();
+			obj.paintMap();
 		}, false);
-		obj.reload();
+		var fondo = new Image();        
+		fondo.src = document.getElementById('mapImagen').value; 
+		canvas.ctx.drawImage(fondo, 0, 0, sizeWidth, sizeHeight);
+		var separacion = cuadricula.separacion? parseInt(cuadricula.separacion): 40;
+		for (i = 0; i < 9000; i += separacion){
+			canvas.ctx.beginPath();
+			canvas.ctx.strokeStyle = `${cuadricula.color}`;
+			canvas.ctx.lineWidth = cuadricula.grosor;
+			canvas.ctx.moveTo(0, i);
+			canvas.ctx.lineTo(canvas.width, i);
+			canvas.ctx.stroke();
+		}
+		for (i = 0; i < 9000; i += separacion){
+			canvas.ctx.beginPath();
+			canvas.ctx.strokeStyle = `${cuadricula.color}`;
+			canvas.ctx.lineWidth = cuadricula.grosor;
+			canvas.ctx.moveTo(i, 0);
+			canvas.ctx.lineTo(i, canvas.width);
+			canvas.ctx.stroke();
+		}
+		jugadores.map(j=>{
+			if(j.live){
+				if(j.jugador){
+					canvas.ctx.fillStyle = `${j.color}`;
+					canvas.ctx.font = `${sizeText}px Arial`;
+					canvas.ctx.fillText(`${j.personaje}`, j.x, j.y -2);
+					canvas.ctx.fillStyle = `${j.color}`;
+					canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
+					canvas.ctx.beginPath();
+				}
+			}
+		});
+		enemigos.map(j=>{
+			if(j.live){
+				if(!j.jugador){
+					canvas.ctx.fillStyle = `${j.color}`;
+					canvas.ctx.font = `${sizeText}px Arial`;
+					canvas.ctx.fillText(`${j.personaje}`, j.x, j.y -2);
+					canvas.ctx.fillStyle = `${j.color}`;
+					canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
+					canvas.ctx.beginPath();
+				}
+			}
+		});
 	},
 	getMousePos: (canvas, evt)=>{
 		var rect = canvas.getBoundingClientRect();
@@ -98,386 +227,107 @@ var obj = {
 			y: evt.clientY - rect.top
 		};
 	},
-	setColorTexto: ()=>{
-		var { reload } = obj;
-		obj.color = document.getElementById('color').value;
-		reload();
-	},
-	imagen: ()=>{
-		const { sizeWidth, sizeHeight } = obj;
-		var fondo = new Image();        
-		fondo.src = './mapa1.jpg'; 
-		canvas.ctx.drawImage(fondo, 0, 0, sizeWidth, sizeHeight);
-	},
-	placeMap: ()=>{
-		const { sizeGamers, sizeText, jugadores, color } = obj;
-		jugadores.map(j=>{
-			canvas.ctx.fillStyle = `${color}`;
-			canvas.ctx.font = `${sizeText}px Arial`;
-			canvas.ctx.fillText(`${j.personaje}`, j.x, j.y -2);
-			canvas.ctx.fillStyle = `${j.color}`;
-			canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
-			canvas.ctx.beginPath();
-		});
-	},
-	paintCuadricula: ()=>{
-		const { cuadricula } = obj;
-		for (i = 0; i < 9000; i += cuadricula.separacion){
-			canvas.ctx.beginPath();
-			canvas.ctx.strokeStyle = `${cuadricula.color}`;
-			canvas.ctx.lineWidth = cuadricula.grosor;
-			canvas.ctx.moveTo(0, i);
-			canvas.ctx.lineTo(canvas.width, i);
-			canvas.ctx.stroke();
-		}
-		for (i = 0; i < 9000; i += cuadricula.separacion){
-			canvas.ctx.beginPath();
-			canvas.ctx.strokeStyle = `${cuadricula.color}`;
-			canvas.ctx.lineWidth = cuadricula.grosor;
-			canvas.ctx.moveTo(i, 0);
-			canvas.ctx.lineTo(i, canvas.width);
-			canvas.ctx.stroke();
-		}
-	},
-	reload: ()=>{
-		const { imagen, placeMap, paintCuadricula } = obj;
-		imagen();
-		paintCuadricula();
-		placeMap();
-	},
-	chaengeSizeGamers:()=>{
-		const { reload } = obj;
-		var tmp = prompt("Tamaño de personajes en el mapa (10, 20....):", "");
-		obj.sizeGamers = parseInt(tmp);
-		var tmp = prompt("Tamaño del texto (10, 20....):", "");
-		obj.sizeText = parseInt(tmp);
-		reload();
-	},
-	chaengeCuadricula: ()=>{
-		var { cuadricula, reload } = obj;
-		var newColor = document.getElementById('color').value;
-		if (confirm(`Cambiar al color selecionado ${newColor}?`)){
-			cuadricula.color = newColor;
-		}
-		var tmp = prompt("Grosor de lineas (1, 2....):", `${cuadricula.grosor}`);
-		cuadricula.grosor = parseInt(tmp);
-		var tmp = prompt("Separación de lineas (30, 40....):", `${cuadricula.separacion}`);
-		cuadricula.separacion = parseInt(tmp);
-		reload();
-	},
-	newJugador: ()=>{
-		var { jugadores, list }= obj;
-		var jugador = new Jugador(true);
-		jugador.color = document.getElementById('color').value;
-		jugadores.push(jugador);
-		list();
-	},
-	newEnemigo: ()=>{
-		var { jugadores, listNpc }= obj;
-		var jugador = new Jugador(false);
-		jugador.color = document.getElementById('color').value;
-		jugadores.push(jugador);
-		listNpc();
-	},
-	list: ()=>{
-		const { jugadores, reload, painData } = obj;
-		var lista = document.getElementById('lista');
-		lista.innerHTML = "";
-		var ol = document.createElement("ol");
+	listWorldGamers: ()=>{
+		var { jugadores, enemigos, selectorMap, paintMap } = obj;
+		var container = document.getElementById('worldGamers');
+		container.innerHTML = "";
+		var ul = document.createElement("ul");
 		jugadores.map(j=>{
 			if(j.live){
 				if(j.jugador){
-					var li = document.createElement("li");
-					li.setAttribute("id", j.id);
-					li.innerHTML = `
-						<b>${j.personaje}</b> ${j.nombre}<br/>
-						mo:<b>${j.oro}</b><br/>
-						NV:<b>${j.nivel} (${j.experiencia} Exp)</b><br/>
-					`;
-					li.onclick = function(){ 
-						obj.selecion = j.id;
-						painData(j.id, true); 
+					var a = document.createElement("li");
+					a.onclick = function(){ obj.selectorMap = j.id; obj.listWorldGamers(); };
+					var icon = j.clase.icon? j.clase.icon: '<b>NA</b>';
+					if(j.id == selectorMap){
+						a.innerHTML = `&#x265B; ${j.personaje} <span style="color: ${j.color};">${icon}<span>`;
+					}else{
+						a.innerHTML = `${j.personaje} <span style="color: ${j.color};">${icon}<span>`;
 					}
-					li.style.cursor = "pointer";
-					li.style.color = `${j.color}`;
-					ol.appendChild(li);
+					a.style.cursor = "pointer";
+					ul.appendChild(a);
 				}
 			}
 		});
-		lista.appendChild(ol);
-		reload();
+		container.appendChild(ul);
+		var ule = document.createElement("ul");
+		enemigos.map(j=>{
+			if(j.live){
+				if(!j.jugador){
+					var a = document.createElement("li");
+					a.onclick = function(){ obj.selectorMap = j.id; obj.listWorldGamers(); };
+					if(j.id == selectorMap){
+						a.innerHTML = `&#x265B; ${j.personaje} <span style="color: ${j.color};">&#x2620;<span>`;
+					}else{
+						a.innerHTML = `${j.personaje} <span style="color: ${j.color};">&#x2620;<span>`;
+					}
+					a.style.cursor = "pointer";
+					ule.appendChild(a);
+				}
+			}
+		});
+		container.appendChild(ule);
+		paintMap();
 	},
-	listNpc: ()=>{
-		const { jugadores, reload, painData } = obj;
-		var lista = document.getElementById('listaNpc');
-		lista.innerHTML = "";
-		var ol = document.createElement("ol");
+	changePlace: (x, y)=>{
+		var { jugadores, enemigos, selectorMap } = obj;
 		jugadores.map(j=>{
 			if(j.live){
-				if(j.jugador == false){
-					var li = document.createElement("li");
-					li.setAttribute("id", j.id);
-					li.innerHTML = `
-						<b>${j.personaje}</b> ${j.nombre}<br/>
-						PV:<b>${j.pv()}</b><br/>
-						mo:<b>${j.oro}</b> Oro<br/>
-						NV:<b>${j.nivel} (${j.experiencia} Exp)</b><br/>
-					`;
-					li.onclick = function(){ 
-						obj.selecion = j.id;
-						painData(j.id, false); 
+				if(j.jugador){
+					if(j.id == selectorMap){
+						j.x = x;
+						j.y = y;
 					}
-					li.style.cursor = "pointer";
-					li.style.color = `${j.color}`;
-					ol.appendChild(li);
 				}
 			}
 		});
-		lista.appendChild(ol);
-		reload();
+		enemigos.map(j=>{
+			if(j.live){
+				if(!j.jugador){
+					if(j.id == selectorMap){
+						j.x = x;
+						j.y = y;
+					}
+				}
+			}
+		});
 	},
-	painData: (id, tipo)=>{
-		const { jugadores, painData, list, listNpc,  reload, tempPosicion } = obj;
-		var div = document.getElementById('datosJugador');
-		var data = jugadores.filter(j=> j.id == id);
-		data = data[0];
-		var arayDatos = [];
-		data.datos.map(ha=>{
-			arayDatos[ha.pref] = ha.puntos;
-		});
-		var html = `
-		<table>
-			<tr>
-				<td>
-					Nombre: <b>${data.personaje}</b> (${data.nombre})</b><br/>`;
-		if(tipo){
-			html += `
-					Raza: <b>${data.raza.nombre} (MOV ${data.raza.mov})</b><br/>
-					Clase: <b>${data.clase.nombre} (DA ${data.clase.da})</b><br/>`;
-		}else{
-			html += `PV: <b>${data.vida})</b><br/>`;
-
-		}
-			html += `
-					<div id="detalleJugador"></div>
-				</td>
-				<td>
-					<b>Habilidades:</b><br/><ol id="detallesHabilidad"></ol>
-				</td>
-				<td>
-					<b>Datos:</b><br/><ol id="detallesDatos"></ol>
-				</td>
-				<td>
-					<b>Puntos:</b><br/>
-					<ol id="detallesDatos">
-						<li><b>PV</b> ${(data.clase.da + arayDatos['CON'])} (${data.clase.da}DA + ${arayDatos['CON']}CON)</li>
-						<li><b>DEF</b> armadura + escudo + 10</li>
-						<li><b>MOV</b> DES x metro o pies</li>
-						<li><b>ATQ (cuerpo)</b> t. nivel + bono clase + ${arayDatos['FUE']}FUE</li>
-						<li><b>ATQ (proyectil)</b> t. nivel + bono clase + ${arayDatos['DES']}DES</li>
-						<li><b>INST</b> t. nivel + bono clase</li>
-						<li><b>POD</b> t. nivel + ${arayDatos['INT']}INT</li>
-					</ol>
-				</td>
-				<td>
-					<b>Armas:</b><br/><ul id="detallesArmas"></ul>
-				</td>
-		</tr>
-		<tr>
-			<td colspan="5" >
-				<b>Transfondo:</b><br/>
-				<textarea rows="10" cols="50" id="transfondos">${data.transfondos}</textarea>
-			</td>
-		</tr>`;
-		html += `</table>`;
-		div.innerHTML = html;
-		var detalleJugador = document.getElementById('detalleJugador');
-		var oro = document.createElement('span');
-		oro.innerHTML = "<b>mo</b> oro |";
-		oro.style.cursor = "pointer";
-		oro.onclick = function(){
-			data.setOro();
-			painData(id);
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(oro);
-		var exp = document.createElement('span');
-		exp.innerHTML = "<b>Exp</b> |";
-		exp.style.cursor = "pointer";
-		exp.onclick = function(){
-			data.setExp();
-			reload();
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(exp);
-		var del = document.createElement('span');
-		del.innerHTML = "<b>Posicion</b> |";
-		del.style.cursor = "pointer";
-		del.onclick = function(){
-			data.setPosition(tempPosicion.x, tempPosicion.y);
-			painData(id);
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(del);
-		detalleJugador.appendChild(document.createElement('br'));
-		var vida = document.createElement('span');
-		vida.innerHTML = "<b>Vida</b> |";
-		vida.style.cursor = "pointer";
-		vida.onclick = function(){
-			data.setVida();
-			painData(id);
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(vida);
-		document.getElementById('transfondos').onkeyup = function(){
-			data.setTransfondos( document.getElementById('transfondos').value );
-		};
-		var arma = document.createElement('span');
-		arma.innerHTML = "<b>+Arma</b> |";
-		arma.style.cursor = "pointer";
-		arma.onclick = function(){
-			data.addArma();
-			painData(id);
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(arma);
-		detalleJugador.appendChild(document.createElement('br'));
-		var editColor = document.createElement('span');
-		editColor.innerHTML = "<b>Color</b> |";
-		editColor.style.cursor = "pointer";
-		editColor.onclick = function(){
-			data.setColor( document.getElementById('color').value );
-			painData(id);
-			reload();
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(editColor);
-		var del = document.createElement('span');
-		del.innerHTML = "<b>Eliminar</b> |";
-		del.style.cursor = "pointer";
-		del.onclick = function(){
-			data.eliminar();
-			painData(id);
-			list();
-			listNpc();
-		};
-		detalleJugador.appendChild(del);
-		var detalles = document.getElementById('detallesDatos');
-		data.datos.map(ha=>{
-			var li = document.createElement('li');
-			li.style.cursor = "pointer";
-			li.innerHTML = `${ha.pref} (+${ha.puntos})`;
-			li.onclick = function(){ 
-				data.setDatos(`${ha.nombre}`);
-				painData(id);
-				reload();
-				list();
-				listNpc();
-			};
-			detalles.appendChild(li);
-		});
-		var detalles = document.getElementById('detallesHabilidad');
-		data.habilidades.map(ha=>{
-			var li = document.createElement('li');
-			li.style.cursor = "pointer";
-			li.innerHTML = `${ha.nombre} (+${ha.puntos})`;
-			li.onclick = function(){ 
-				data.setHabilidades(`${ha.nombre}`);
-				painData(id);
-				reload();
-				list();
-				listNpc();
-			};
-			detalles.appendChild(li);
-		});
-		var PesoTotal = 0;
-		var detalles = document.getElementById('detallesArmas');
-		data.armas.map(ha=>{
-			var editarma = document.createElement('span');
-			editarma.innerHTML = " <b>Edit</b>";
-			editarma.style.cursor = "pointer";
-			editarma.onclick = function(){
-				data.editArma(ha.id);
-				painData(id);
-				list();
-				listNpc();
-			}
-			var delarma = document.createElement('span');
-			delarma.innerHTML = " <b>Deleted</b>";
-			delarma.style.cursor = "pointer";
-			delarma.onclick = function(){
-				data.deleteArma(ha.id);
-				painData(id);
-				reload();
-				list();
-				listNpc();
-			}
-			var li = document.createElement('li');
-			li.style.cursor = "pointer";
-			li.innerHTML = `${ha.nombre} (+${ha.puntos}) (-${ha.peso} Kg)`;
-			li.appendChild(editarma);
-			li.appendChild(delarma);
-			detalles.appendChild(li);
-			PesoTotal = PesoTotal + ha.peso;
-		});
-		var li = document.createElement('li');
-		li.innerHTML = `Peso Total: ${PesoTotal} Kg`;
-		detalles.appendChild(li);
+	contador: ()=>{
+		var listContador = document.getElementById('listContador');
+		idTemp = ((new Date()).getTime() * parseInt((Math.random()*1000)));
+		var div = document.createElement('div');
+		div.setAttribute('id', idTemp);
+		listContador.appendChild(div);
+		var co = new Contador();
+		co.new(`${idTemp}`);
 	},
 	//generar timepo
 	// intervalo
 	//dia: {desc: '', numero: 0, play: false, minutos: 0, division: false, noche: false, seg: 0, mint: 0},
 	setTiempo: ()=>{
-		var { dia, initDia, stopTime } =obj;
-		var contenedor = document.getElementById('divData');
-		dia.desc = prompt("Descripción del día:", ``);
-		dia.minutos = parseInt(prompt("Cantidad enminutos de duración (Día) :", `${dia.minutos}`));
+		var { dia } =obj;
+		dia.seg = 0;
+		dia.mint = 0;
+		dia.noche = false;
+		dia.desc = prompt("Descripcion del dia:", ``);
+		dia.minutos = parseInt(prompt("Cantidad enminutos de duracion (Dia) :", `${dia.minutos}`));
 		if (confirm(`Quieres dividir el dia de la noche (Cada dia durara ${dia.minutos} minutos y la noche ${dia.minutos} minutos)`)){
 			dia.division = true;
 		} else {
 			dia.division = false;
 		}
-		dia.numero = prompt("Comenzar desde el día:", `${dia.numero}`);
-		var text =  document.createElement('span');
-		text.setAttribute('id', 'tiempoText');
-		var estDia = "";
-		if(dia.division){
-			estDia = dia.noche? 'Noche': 'Día';
-		}
-		text.innerHTML = `<b>(${estDia}) :: ${dia.desc};</b> Dia: ${dia.numero}; (MINT ${dia.secuencia}) <br/>`;
-		contenedor.appendChild(text);
-		var start = document.createElement('span');
-		start.innerHTML = "<b>Comenzar</b> |";
-		start.style.cursor = "pointer";
-		start.onclick = function(){
-			initDia();
-		};
-		contenedor.appendChild(start);
-		var stop = document.createElement('span');
-		stop.innerHTML = "<b>Detener</b> |";
-		stop.style.cursor = "pointer";
-		stop.onclick = function(){
-			stopTime();
-		};
-		contenedor.appendChild(stop);
+		dia.numero = prompt("Comenzar desde el dia:", `${dia.numero}`);
 	},
 	initDia: ()=>{
 		var { dia } = obj;
-		if (confirm(`Seguro quiere comenzar lacuenia de día?`)){
+		if (confirm(`Seguro quiere comenzar lacuenia de dia?`)){
 			dia.play = true;
 		} 
 	},
-	stopTime: ()=>{ clearInterval(obj.intervalo); },
+	stopTime: ()=>{ obj.dia.play = false; },
 	paintTime: ()=>{
 		var { dia } = obj;
 		if(dia.play){
-			var contenedor = document.getElementById('tiempoText');
+			var contenedor = document.getElementById('showTime');
 			dia.seg = parseInt(dia.seg) + 1;
 			if(dia.seg >= 60){
 				dia.seg = 0;
@@ -489,26 +339,19 @@ var obj = {
 						dia.numero = parseInt(dia.numero) + 1;
 						dia.mint = 0;
 						dia.noche = false;
+						document.body.style.backgroundColor = "#FFFFFF";
 					}else{
 						dia.noche = true;
 						dia.mint = 0;
+						document.body.style.backgroundColor = "#CDCDCD";
 					}
 				}else{
 					dia.numero = parseInt(dia.numero) + 1;
 					dia.mint = 0;
 				}
 			}
-			var estDia = dia.noche? 'Noche': 'Día';
-			contenedor.innerHTML = `<b>(${estDia}) :: ${dia.desc};</b> Dia: ${dia.numero}; (Min ${dia.mint} Seg ${dia.seg}) <br/>`;
+			var estDia = dia.noche? '&#x263D; Night': '&#x26C5; Day';
+			contenedor.innerHTML = `${estDia} Time:: Day ${dia.numero} (Min ${dia.mint} Seg ${dia.seg})`;
 		}
-	},
-	contador: ()=>{
-		var listContador = document.getElementById('listContador');
-		idTemp = ((new Date()).getTime() * parseInt((Math.random()*1000)));
-		var div = document.createElement('div');
-		div.setAttribute('id', idTemp);
-		listContador.appendChild(div);
-		var co = new Contador();
-		co.new(`${idTemp}`);
 	},
 };
