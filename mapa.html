@@ -27,6 +27,7 @@
 		<span class="puntero" onclick="obj.showDiv('divEnemies');">&#x2620; Enemies </span>|
 		<span class="puntero" onclick="obj.showDiv('divData');">&#x2696; Data </span>|
 		<span class="puntero" onclick="obj.showDiv('divAccountant');">&#x2686; Accountant </span>|
+		<span class="puntero" onclick="obj.showDiv('divSave');"> Save/Load </span>|
 		<!--span class="puntero" onclick="obj.showDiv('divDie');">&#x2685; Die </span>|-->
 		<hr/>
 		<div id="divMap" class="cuadro esconder">
@@ -87,7 +88,15 @@
 				</div>
 			</div>
 		</div>
-		<div id="divData" class="cuadro esconder">Commerce</div>
+		<div id="divSave" class="cuadro esconder">
+			<div>
+				<p><b>Nota:</b> Solo se guardan jugadores y enemigos vivos junto con sus posiciones en el mapa y sus atributos!!</p>
+				Nombre de la partida: <input type="text" id="nombreParty"/><br/>
+				<button class="button1" onclick="obj.saveParty();"> Save Party </button>
+				<br/>Load Party (arhivo.txt)<input type="file" id="loarParty" class="button1" id="file-input" />
+				<a id="descargar" class="esconder">descarga</a>
+			</div>
+		</div>
 		<span class="closebtn" style="cursor: pointer;;" onclick="obj.reload();">&#x267C; Reload</span>
 	</div>
 	<img src="mapas/1.jpg" style="display:none" >

@@ -5,9 +5,6 @@ Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo
 window.onload = function() {
 	console.log('Credo por Luis Bernal (guitarradeluis@gmail.com)');
 	console.log('Si modificar el codigo fuente no borres mi nombre agrega el tuyo y compartelo');
-	//document.getElementById('btn_tablas').onclick = function(){ obj.toogleTabla(); };
-	//document.getElementById('calculadora').onkeyup = function(){ obj.calculadora(); };
-	//obj.start(); obj.jugadores.map(v=>{ console.log( JSON.stringify(v) ); });
 	document.getElementById('calculadora').onkeyup = function(){ obj.calculadora(); };
 	document.getElementById('mapSizeWidth').value = obj.sizeWidth;
 	document.getElementById('mapSizeWidth').onkeyup = function(){ obj.sizeWidth = this.value; obj.paintMap(); };
@@ -24,6 +21,8 @@ window.onload = function() {
 	document.getElementById('mapText').value = obj.sizeText;
 	document.getElementById('mapText').onkeyup = function(){ obj.sizeText = this.value; obj.paintMap(); };
 	document.getElementById('mapImagen').onchange = function(){ obj.paintMap(); };
+
+	document.getElementById('loarParty').addEventListener('change', obj.loadParty, false);
 	openNav();
 };
 function openNav(){
@@ -354,4 +353,76 @@ var obj = {
 			contenedor.innerHTML = `${estDia} Time:: Day ${dia.numero} (Min ${dia.mint} Seg ${dia.seg})`;
 		}
 	},
+	saveParty: ()=>{
+		var save = {jugadores: [], enemigos: []};
+		obj.jugadores.map(v=>{ if(v.live){ save.jugadores.push(v); } });
+		obj.enemigos.map(v=>{ if(v.live){ save.enemigos.push(v); } });
+		var nombreParty = document.getElementById('nombreParty');
+		var elem = document.getElementById('descargar');
+		elem.download = `${nombreParty.value}.txt`;
+		elem.href = "data:application/octet-stream,"+ encodeURIComponent( JSON.stringify(save) );
+		elem.click();
+	},
+	loadParty: e=>{
+		var { jugadores, enemigos, listcharactersEnemy, listcharacters, listWorldGamers } = obj;
+		var archivo = e.target.files[0];
+		if (!archivo) {
+		  return;
+		}
+		var lector = new FileReader();
+		lector.onload = function(e) {
+			var contenido = e.target.result;
+			var load = JSON.parse(contenido);
+			if(load.hasOwnProperty('jugadores')){
+				load.jugadores.map(j=>{
+					var jugador = new Jugador(true);
+					jugador.id = ((new Date()).getTime() * parseInt((Math.random()*1000)));
+					jugador.live = true;
+					jugador.select = j.select;
+					jugador.x = j.x;
+					jugador.y = j.y;
+					jugador.oro = j.oro;
+					jugador.exp = j.exp;
+					jugador.nivel = j.nivel;
+					jugador.nombre = j.nombre;
+					jugador.personaje = j.personaje;
+					jugador.color =  j.color;
+					jugador.raza = j.raza;
+					jugador.clase = j.clase;
+					jugador.habilidades = j.habilidades;
+					jugador.datos = j.datos;
+					jugador.armas = j.armas;
+					jugador.transfondos =  j.transfondos;
+					jugadores.push(jugador);
+				});
+			}
+			if(load.hasOwnProperty('enemigos')){
+				load.enemigos.map(j=>{
+					var jugador = new Jugador(false);
+					jugador.id = ((new Date()).getTime() * parseInt((Math.random()*1000)));
+					jugador.live = true;
+					jugador.select = j.select;
+					jugador.x = j.x;
+					jugador.y = j.y;
+					jugador.oro = j.oro;
+					jugador.exp = j.exp;
+					jugador.nivel = j.nivel;
+					jugador.nombre = j.nombre;
+					jugador.personaje = j.personaje;
+					jugador.color =  j.color;
+					jugador.raza = j.raza;
+					jugador.clase = j.clase;
+					jugador.habilidades = j.habilidades;
+					jugador.datos = j.datos;
+					jugador.armas = j.armas;
+					jugador.transfondos =  j.transfondos;
+					enemigos.push(jugador);
+				});
+			}
+		};
+		lector.readAsText(archivo);
+		listcharactersEnemy();
+		listWorldGamers();
+		listcharacters();
+	}
 };
