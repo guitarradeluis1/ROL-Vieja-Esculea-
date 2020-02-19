@@ -44,6 +44,16 @@ var obj = {
 	sizeText: 30,
 	dia: {desc: '', numero: 0, play: false, minutos: 2, division: false, noche: false, seg: 0, mint: 0},
 	intervalo: setInterval( function(){ obj.paintTime(); }, 1000),
+	intervaloReload: setInterval( function(){
+		var edi1 = document.getElementById('changeCharacter');
+		var edi2 = document.getElementById('changeCharacterEnemy');
+		if(edi1.innerHTML.length == 0){
+			obj.listcharacters();
+		}
+		if(edi2.innerHTML.length == 0){
+			obj.listcharactersEnemy();
+		}
+	}, 4000),
 	calculadora: ()=>{
 		try{
 			var text = document.getElementById('calculadora').value;
