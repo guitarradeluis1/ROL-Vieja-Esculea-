@@ -469,65 +469,75 @@ var obj = {
         elem.click();
     },
     loadParty: e => {
-        var { jugadores, enemigos, listcharactersEnemy, listcharacters, listWorldGamers } = obj;
-        var archivo = e.target.files[0];
-        if (!archivo) {
-            return;
+        try {
+            var { jugadores, enemigos, listcharactersEnemy, listcharacters, listWorldGamers } = obj;
+            var archivo = e.target.files[0];
+            if (!archivo) {
+                throw "Error:: Carga de archivo!";
+            }
+            var lector = new FileReader();
+            lector.onload = function(e) {
+                var contenido = e.target.result;
+                var load = JSON.parse(contenido);
+                if (load.hasOwnProperty('jugadores')) {
+                    load.jugadores.map(j => {
+                        var jugador = new Jugador(true);
+                        jugador.id = ((new Date()).getTime() * parseInt((Math.random() * 1000)));
+                        jugador.live = true;
+                        jugador.select = j.select;
+                        jugador.x = j.x;
+                        jugador.y = j.y;
+                        jugador.oro = j.oro;
+                        jugador.exp = j.exp;
+                        jugador.nivel = j.nivel;
+                        jugador.nombre = j.nombre;
+                        jugador.personaje = j.personaje;
+                        jugador.color = j.color;
+                        jugador.raza = j.raza;
+                        jugador.clase = j.clase;
+                        jugador.habilidades = j.habilidades;
+                        jugador.datos = j.datos;
+                        jugador.armas = j.armas;
+                        jugador.transfondos = j.transfondos;
+                        jugadores.push(jugador);
+                    });
+                    alert('Jugadores cargados con exito.');
+                } else {
+                    throw "Error:: Carga nodo de Jugadores!";
+                }
+                if (load.hasOwnProperty('enemigos')) {
+                    load.enemigos.map(j => {
+                        var jugador = new Jugador(false);
+                        jugador.id = ((new Date()).getTime() * parseInt((Math.random() * 1000)));
+                        jugador.live = true;
+                        jugador.select = j.select;
+                        jugador.x = j.x;
+                        jugador.y = j.y;
+                        jugador.oro = j.oro;
+                        jugador.exp = j.exp;
+                        jugador.nivel = j.nivel;
+                        jugador.nombre = j.nombre;
+                        jugador.personaje = j.personaje;
+                        jugador.color = j.color;
+                        jugador.raza = j.raza;
+                        jugador.clase = j.clase;
+                        jugador.habilidades = j.habilidades;
+                        jugador.datos = j.datos;
+                        jugador.armas = j.armas;
+                        jugador.transfondos = j.transfondos;
+                        enemigos.push(jugador);
+                    });
+                    alert('Enemigos cargados con exito.');
+                } else {
+                    throw "Error:: Carga nodo de Enemigos!";
+                }
+            };
+            lector.readAsText(archivo);
+            listcharactersEnemy();
+            listWorldGamers();
+            listcharacters();
+        } catch (error) {
+            alert(`${error}`);
         }
-        var lector = new FileReader();
-        lector.onload = function(e) {
-            var contenido = e.target.result;
-            var load = JSON.parse(contenido);
-            if (load.hasOwnProperty('jugadores')) {
-                load.jugadores.map(j => {
-                    var jugador = new Jugador(true);
-                    jugador.id = ((new Date()).getTime() * parseInt((Math.random() * 1000)));
-                    jugador.live = true;
-                    jugador.select = j.select;
-                    jugador.x = j.x;
-                    jugador.y = j.y;
-                    jugador.oro = j.oro;
-                    jugador.exp = j.exp;
-                    jugador.nivel = j.nivel;
-                    jugador.nombre = j.nombre;
-                    jugador.personaje = j.personaje;
-                    jugador.color = j.color;
-                    jugador.raza = j.raza;
-                    jugador.clase = j.clase;
-                    jugador.habilidades = j.habilidades;
-                    jugador.datos = j.datos;
-                    jugador.armas = j.armas;
-                    jugador.transfondos = j.transfondos;
-                    jugadores.push(jugador);
-                });
-            }
-            if (load.hasOwnProperty('enemigos')) {
-                load.enemigos.map(j => {
-                    var jugador = new Jugador(false);
-                    jugador.id = ((new Date()).getTime() * parseInt((Math.random() * 1000)));
-                    jugador.live = true;
-                    jugador.select = j.select;
-                    jugador.x = j.x;
-                    jugador.y = j.y;
-                    jugador.oro = j.oro;
-                    jugador.exp = j.exp;
-                    jugador.nivel = j.nivel;
-                    jugador.nombre = j.nombre;
-                    jugador.personaje = j.personaje;
-                    jugador.color = j.color;
-                    jugador.raza = j.raza;
-                    jugador.clase = j.clase;
-                    jugador.habilidades = j.habilidades;
-                    jugador.datos = j.datos;
-                    jugador.armas = j.armas;
-                    jugador.transfondos = j.transfondos;
-                    enemigos.push(jugador);
-                });
-            }
-        };
-        lector.readAsText(archivo);
-        listcharactersEnemy();
-        listWorldGamers();
-        listcharacters();
     }
 };
