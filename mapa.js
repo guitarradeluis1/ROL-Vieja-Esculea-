@@ -42,7 +42,6 @@ window.onload = function() {
         obj.paintMap();
     };
     document.getElementById('mapImagen').onchange = function() { obj.paintMap(); };
-
     document.getElementById('loarParty').addEventListener('change', obj.loadParty, false);
     openNav();
 };
@@ -90,6 +89,12 @@ var obj = {
             clases[i].classList.add("esconder");
         }
         document.getElementById(`${show}`).classList.toggle('esconder');
+        if (show == 'divEnemies' || show == '') {
+            document.getElementById('changeCharacterEnemy').innerHTML = '';
+            document.getElementById('detailSheetEnemy').innerHTML = '';
+            document.getElementById('changeCharacter').innerHTML = '';
+            document.getElementById('detailSheet').innerHTML = '';
+        }
     },
     showDivData: show => {
         var clases = document.getElementsByClassName('cuadroData');
@@ -260,7 +265,7 @@ var obj = {
         };
     },
     listWorldGamers: () => {
-        var { jugadores, enemigos, selectorMap, paintMap } = obj;
+        var { jugadores, enemigos, selectorMap } = obj;
         var container = document.getElementById('worldGamers');
         container.innerHTML = "";
         var tabla = document.createElement("table");
@@ -370,7 +375,6 @@ var obj = {
             }
         });
         container.appendChild(tabla);
-        paintMap();
     },
     changePlace: (x, y) => {
         var { jugadores, enemigos, selectorMap } = obj;
@@ -455,22 +459,40 @@ var obj = {
                 }
             }
             var estDia = dia.noche ? '&#x263D; Night' : '&#x26C5; Day';
-            contenedor.innerHTML = `${estDia} Time:: Day ${dia.numero} (Min ${dia.mint} Seg ${dia.seg})`;
+            contenedor.innerHTML = `${estDia} Time:: Day ${dia.numero} (Min ${dia.mint} Seg ${dia.seg}) <i>${dia.desc}</i><br/>`;
         }
     },
     saveParty: () => {
-        var save = { jugadores: [], enemigos: [] };
-        obj.jugadores.map(v => { if (v.live) { save.jugadores.push(v); } });
-        obj.enemigos.map(v => { if (v.live) { save.enemigos.push(v); } });
-        var nombreParty = document.getElementById('nombreParty');
-        var elem = document.getElementById('descargar');
-        elem.download = `${nombreParty.value}.txt`;
-        elem.href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(save));
-        elem.click();
+        try {
+            var save = { jugadores: [], enemigos: [], mapa: {}, dia: {} };
+            obj.jugadores.map(v => { if (v.live) { save.jugadores.push(v); } });
+            obj.enemigos.map(v => { if (v.live) { save.enemigos.push(v); } });
+            save.mapa = {
+                sizeWidth: obj.sizeWidth,
+                sizeHeight: obj.sizeHeight,
+                sizeGamers: obj.sizeGamers,
+                cuadricula: obj.cuadricula,
+                selectorMap: obj.selectorMap,
+                sizeText: obj.sizeText,
+                image: document.getElementById('mapImagen').value
+            };
+            save.dia = obj.dia;
+            save.dia.play = false; //Este punto es al momento de cargar l partid este en pusa pero mantenga os valors creados
+            var nombreParty = document.getElementById('nombreParty');
+            if (nombreParty.value.length == 0) {
+                throw "Error:: Ingresa el nombre de la partida!";
+            }
+            var elem = document.getElementById('descargar');
+            elem.download = `${nombreParty.value}.txt`;
+            elem.href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(save));
+            elem.click();
+        } catch (error) {
+            alert(`${error}`);
+        }
     },
     loadParty: e => {
         try {
-            var { jugadores, enemigos, listcharactersEnemy, listcharacters, listWorldGamers } = obj;
+            var { jugadores, enemigos, listcharactersEnemy, listcharacters, listWorldGamers, paintMap } = obj;
             var archivo = e.target.files[0];
             if (!archivo) {
                 throw "Error:: Carga de archivo!";
@@ -531,11 +553,44 @@ var obj = {
                 } else {
                     throw "Error:: Carga nodo de Enemigos!";
                 }
+                if (load.hasOwnProperty('mapa')) {
+                    obj.sizeWidth = load.mapa.sizeWidth;
+                    obj.sizeHeight = load.mapa.sizeHeight;
+                    obj.sizeGamers = load.mapa.sizeGamers;
+                    obj.cuadricula = load.mapa.cuadricula;
+                    obj.selectorMap = load.mapa.selectorMap;
+                    obj.sizeText = load.mapa.sizeText;
+                    document.getElementById('mapImagen').value = load.mapa.image;
+                    document.getElementById('mapSizeWidth').value = obj.sizeWidth;
+                    document.getElementById('mapSizeHeight').value = obj.sizeHeight;
+                    document.getElementById('mapSizeGamers').value = obj.sizeGamers;
+                    document.getElementById('mapcolor').value = obj.cuadricula.color;
+                    document.getElementById('mapSeparacion').value = obj.cuadricula.separacion;
+                    document.getElementById('mapGlosorn').value = obj.cuadricula.grosor;
+                    document.getElementById('mapText').value = obj.sizeText;
+                    alert('Mapa cargados con exito.');
+                } else {
+                    throw "Error:: Carga nodo de Mapa!";
+                }
+                if (load.hasOwnProperty('dia')) {
+                    obj.dia = load.dia;
+                    if (obj.dia.division) {
+                        if (obj.dia.noche) {
+                            document.body.style.backgroundColor = "#CDCDCD";
+                        } else {
+                            document.body.style.backgroundColor = "#FFFFFF";
+                        }
+                    }
+                    alert('Dia cargados con exito.');
+                } else {
+                    throw "Error:: Carga nodo de Dia!";
+                }
             };
             lector.readAsText(archivo);
             listcharactersEnemy();
             listWorldGamers();
             listcharacters();
+            paintMap();
         } catch (error) {
             alert(`${error}`);
         }

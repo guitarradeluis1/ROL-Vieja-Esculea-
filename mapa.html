@@ -1,132 +1,127 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<LINK REL=StyleSheet HREF="./mapa.css" TITLE="Contemporaneo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <LINK REL=StyleSheet HREF="./mapa.css" TITLE="Contemporaneo">
 </head>
+
 <body>
-	<div id="mySidenav" class="sidenav">
-		<input id="calculadora" placeholder="2+3" type="search" />
-		<span style="color: #f1f1f1;" id="resultado"><b>= 0</b></span>
-		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-		<hr/>
-		<div id="lischaracters"></div>
-	</div>
-	<div id="main">
-		<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#x263A; Characters</span>
-		<span class="closebtn" style="cursor: pointer;;" onclick="obj.reload();">&#x267C; Reload</span>
-		<hr/>
-		<span style="font-size:20px;" id="showTime">&#x26C5; Time:: Day 0 (Min 0, Seg 0)</span>
-		<span class="puntero" onclick="obj.setTiempo();" ><b>Seting,</b></span> 
-		<span class="puntero" onclick="obj.initDia();" ><b>Start,</b></span> 
-		<span class="puntero" onclick="obj.stopTime();" ><b>Pause</b></span>
-		<hr/>
-		|
-		<span class="puntero" onclick="obj.showDiv('divMap');">&#x2694; Map </span>|
-		<span class="puntero" onclick="obj.showDiv('divSheet');">&#x268F; Sheet </span>|
-		<span class="puntero" onclick="obj.showDiv('divEnemies');">&#x2620; Enemies </span>|
-		<span class="puntero" onclick="obj.showDiv('divData');">&#x2696; Data </span>|
-		<span class="puntero" onclick="obj.showDiv('divAccountant');">&#x2686; Accountant </span>|
-		<span class="puntero" onclick="obj.showDiv('divSave');"> Save/Load </span>|
-		<!--span class="puntero" onclick="obj.showDiv('divDie');">&#x2685; Die </span>|-->
-		<hr/>
-		<div id="divMap" class="cuadro esconder">
-			<div>
-				Map: <select name="mapImagen" id="mapImagen">
-					<option value="mapas/1.jpg">Uno</option>
-					<option value="mapas/2.jpg">Dos</option>
-					<option value="mapas/3.jpg">Dos</option>
-					<option value="mapas/4.jpg">Dos</option>
-					<option value="mapas/5.jpg">Dos</option>
-					<option value="mapas/6.jpg">Dos</option>
-					<option value="mapas/7.jpg">Dos</option>
-					<option value="mapas/8.jpg">Dos</option>
-					<option value="mapas/9.jpg">Dos</option>
-					<option value="mapas/10.jpg">Diez</option>
-				</select>
-				Width: <input type="number" id="mapSizeWidth"  size="4" /> 
-				Height: <input type="number" id="mapSizeHeight" size="4" /> 
-				size Gamers: <input type="number" id="mapSizeGamers" size="4" />
-				<br/>
-				Color: <input type="color" id="mapcolor">
-				Interval: <input type="number" id="mapSeparacion" size="4" />
-				Thickness: <input type="number" id="mapGlosorn" size="4" />
-				Text: <input type="number" id="mapText" size="4" />
-				<span class="puntero" onclick="obj.paintMap();">| Paint</span>
-			</div>
-			<div id="world"></div>
-			<span id="posicionEjemplo"></span>
-			<div id="worldGamers"></div>
-		</div>
-		<div id="divSheet" class="cuadro">
-			<div>
-				<span class="puntero" onclick="obj.newCharacter();"> + New Character </span>
-			</div>
-			<hr/>
-			<div id="changeCharacter"></div>
-			<div id="detailSheet"></div>
-		</div>
-		<div id="divEnemies" class="cuadro esconder">
-			<div>
-				<span class="puntero" onclick="obj.newCharacterEnemy();"> + New Enemy </span>
-			</div>
-			<hr/>
-			<div style = "display: flex;">
-				<div id="lischaractersEnemy">List</div>
-				<div id="changeCharacterEnemy"></div>
-				<div id="detailSheetEnemy"></div>
-			</div>
-		</div>
-		<div id="divAccountant" class="cuadro esconder">
-			<div>
-				<button class="button1" onclick="obj.contador();"> + Add Accountant</button>
-			</div>
-			<hr/>
-			<div id="listContador"></div>
-		</div>
-		<div id="divData" class="cuadro esconder">
-			<div>
-				<button class="button1" onclick="obj.showDivData('tableClasico');"> Vieja Escuela Clasico</button>
-				<button class="button1" onclick="obj.showDivData('tableCyberpunk');"> Vieja Escuela Cyberpunk</button>
-			</div>
-			<hr/>
-			<div style = "display: flex;">
-				<div id="tableClasico" class="cuadroData esconder">
-					<img src="tablas/0.png" >
-					<img src="tablas/1.png" >
-					<img src="tablas/2.png" >
-					<img src="tablas/3.png" >
-					<img src="tablas/4.png" >
-				</div>
-				<div id="tableCyberpunk" class="cuadroData esconder">
-					lista pendiente...
-				</div>
-			</div>
-		</div>
-		<div id="divSave" class="cuadro esconder">
-			<div>
-				<p><b>Nota:</b> Solo se guardan jugadores y enemigos vivos junto con sus posiciones en el mapa y sus atributos!!</p>
-				Nombre de la partida: <input type="text" id="nombreParty"/><br/>
-				<button class="button1" onclick="obj.saveParty();"> Save Party </button>
-				<br/>Load Party (arhivo.txt)<input type="file" id="loarParty" class="button1" id="file-input" />
-				<a id="descargar" class="esconder">descarga</a>
-			</div>
-		</div>
-		<span class="closebtn" style="cursor: pointer;;" onclick="obj.reload();">&#x267C; Reload</span>
-	</div>
-	<img src="mapas/1.jpg" style="display:none" >
-	<img src="mapas/2.jpg" style="display:none" >
-	<img src="mapas/3.jpg" style="display:none" >
-	<img src="mapas/4.jpg" style="display:none" >
-	<img src="mapas/5.jpg" style="display:none" >
-	<img src="mapas/6.jpg" style="display:none" >
-	<img src="mapas/7.jpg" style="display:none" >
-	<img src="mapas/8.jpg" style="display:none" >
-	<img src="mapas/9.jpg" style="display:none" >
-	<img src="mapas/10.jpg" style="display:none" >
-	<script src='./mapa.js'></script>
-	<script src='./personajes.js'></script>
-	<script src='./clases.js'></script>
-	<script src='./contador.js'></script>
+    <div id="mySidenav" class="sidenav">
+        <input id="calculadora" placeholder="2+3" type="search" />
+        <span style="color: #f1f1f1;" id="resultado"><b>= 0</b></span>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <hr/>
+        <div id="lischaracters"></div>
+    </div>
+    <div id="main">
+        <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#x263A; Characters</span>
+        <span class="closebtn" style="cursor: pointer;;" onclick="obj.reload();">&#x267C; Reload</span>
+        <hr/>
+        <span style="font-size:20px;" id="showTime">&#x26C5; Time:: Day 0 (Min 0, Seg 0)</span>
+        <span class="puntero" onclick="obj.setTiempo();"><b>Seting,</b></span>
+        <span class="puntero" onclick="obj.initDia();"><b>Start,</b></span>
+        <span class="puntero" onclick="obj.stopTime();"><b>Pause</b></span>
+        <hr/> |
+        <span class="puntero" onclick="obj.showDiv('divMap');">&#x2694; Map </span>|
+        <span class="puntero" onclick="obj.showDiv('divSheet');">&#x268F; Sheet </span>|
+        <span class="puntero" onclick="obj.showDiv('divEnemies');">&#x2620; Enemies </span>|
+        <span class="puntero" onclick="obj.showDiv('divData');">&#x2696; Data </span>|
+        <span class="puntero" onclick="obj.showDiv('divAccountant');">&#x2686; Accountant </span>|
+        <span class="puntero" onclick="obj.showDiv('divSave');"> Save/Load </span>|
+        <!--span class="puntero" onclick="obj.showDiv('divDie');">&#x2685; Die </span>|-->
+        <hr/>
+        <div id="divMap" class="cuadro esconder">
+            <div>
+                Map: <select name="mapImagen" id="mapImagen">
+					<option value="mapas/1.jpg">Mapa 1</option>
+					<option value="mapas/2.jpg">Mapa 2</option>
+					<option value="mapas/3.jpg">Mapa 3</option>
+					<option value="mapas/4.jpg">Mapa 4</option>
+					<option value="mapas/5.jpg">Mapa 5</option>
+					<option value="mapas/6.jpg">Mapa 6</option>
+					<option value="mapas/7.jpg">Mapa 7</option>
+					<option value="mapas/8.jpg">Mapa 8</option>
+					<option value="mapas/9.jpg">Mapa 9</option>
+					<option value="mapas/10.jpg">Mapa 10</option>
+				</select> Width: <input type="number" id="mapSizeWidth" size="4" /> Height: <input type="number" id="mapSizeHeight" size="4" /> size Gamers: <input type="number" id="mapSizeGamers" size="4" />
+                <br/> Color: <input type="color" id="mapcolor"> Interval: <input type="number" id="mapSeparacion" size="4" /> Thickness: <input type="number" id="mapGlosorn" size="4" /> Text: <input type="number" id="mapText" size="4" />
+                <span class="puntero" onclick="obj.paintMap();">| Paint</span>
+            </div>
+            <div id="world"></div>
+            <span id="posicionEjemplo"></span>
+            <div id="worldGamers"></div>
+        </div>
+        <div id="divSheet" class="cuadro">
+            <div>
+                <span class="puntero" onclick="obj.newCharacter();"> + New Character </span>
+            </div>
+            <hr/>
+            <div id="changeCharacter"></div>
+            <div id="detailSheet"></div>
+        </div>
+        <div id="divEnemies" class="cuadro esconder">
+            <div>
+                <span class="puntero" onclick="obj.newCharacterEnemy();"> + New Enemy </span>
+            </div>
+            <hr/>
+            <div style="display: flex;">
+                <div id="lischaractersEnemy">List</div>
+                <div id="changeCharacterEnemy"></div>
+                <div id="detailSheetEnemy"></div>
+            </div>
+        </div>
+        <div id="divAccountant" class="cuadro esconder">
+            <div>
+                <button class="button1" onclick="obj.contador();"> + Add Accountant</button>
+            </div>
+            <hr/>
+            <div id="listContador"></div>
+        </div>
+        <div id="divData" class="cuadro esconder">
+            <div>
+                <button class="button1" onclick="obj.showDivData('tableClasico');"> Vieja Escuela Clasico</button>
+                <button class="button1" onclick="obj.showDivData('tableCyberpunk');"> Vieja Escuela Cyberpunk</button>
+            </div>
+            <hr/>
+            <div style="display: flex;">
+                <div id="tableClasico" class="cuadroData esconder">
+                    <img src="tablas/0.png">
+                    <img src="tablas/1.png">
+                    <img src="tablas/2.png">
+                    <img src="tablas/3.png">
+                    <img src="tablas/4.png">
+                </div>
+                <div id="tableCyberpunk" class="cuadroData esconder">
+                    lista pendiente...
+                </div>
+            </div>
+        </div>
+        <div id="divSave" class="cuadro esconder">
+            <div>
+                <p><b>Nota:</b> No se guardan contadores!!</p>
+                Nombre de la partida: <input type="text" id="nombreParty" /><br/>
+                <button class="button1" onclick="obj.saveParty();"> Save Party </button>
+                <br/>Load Party (arhivo.txt)<input type="file" id="loarParty" class="button1" id="file-input" />
+                <a id="descargar" class="esconder">descarga</a>
+            </div>
+        </div>
+        <span class="closebtn" style="cursor: pointer;;" onclick="obj.reload();">&#x267C; Reload</span>
+    </div>
+    <img src="mapas/1.jpg" style="display:none">
+    <img src="mapas/2.jpg" style="display:none">
+    <img src="mapas/3.jpg" style="display:none">
+    <img src="mapas/4.jpg" style="display:none">
+    <img src="mapas/5.jpg" style="display:none">
+    <img src="mapas/6.jpg" style="display:none">
+    <img src="mapas/7.jpg" style="display:none">
+    <img src="mapas/8.jpg" style="display:none">
+    <img src="mapas/9.jpg" style="display:none">
+    <img src="mapas/10.jpg" style="display:none">
+    <script src='./mapa.js'></script>
+    <script src='./personajes.js'></script>
+    <script src='./clases.js'></script>
+    <script src='./contador.js'></script>
 </body>
-</html> 
+
+</html>
