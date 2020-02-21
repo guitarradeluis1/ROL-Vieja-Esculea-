@@ -4,13 +4,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <LINK REL=StyleSheet HREF="./mapa.css" TITLE="Contemporaneo">
+    <title>ROL V1.0</title>
 </head>
 
 <body>
     <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><span style="font-size: 20px;">ROL V1.0 </span>&times;</a>
         <input id="calculadora" placeholder="2+3" type="search" />
         <span style="color: #f1f1f1;" id="resultado"><b>= 0</b></span>
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <hr/>
         <div id="lischaracters"></div>
     </div>
@@ -80,11 +81,16 @@
         </div>
         <div id="divData" class="cuadro esconder">
             <div>
+                <button class="button1" onclick="obj.showDivData('notasDm');"> Notas DM</button>
                 <button class="button1" onclick="obj.showDivData('tableClasico');"> Vieja Escuela Clasico</button>
                 <button class="button1" onclick="obj.showDivData('tableCyberpunk');"> Vieja Escuela Cyberpunk</button>
             </div>
             <hr/>
             <div style="display: flex;">
+                <div id="notasDm" class="cuadroData esconder">
+                    <button class="button1" onclick="obj.nuevNota();"> Nueva Nota </button>
+                    <div id="divNotas"></div>
+                </div>
                 <div id="tableClasico" class="cuadroData esconder">
                     <img src="tablas/0.png">
                     <img src="tablas/1.png">

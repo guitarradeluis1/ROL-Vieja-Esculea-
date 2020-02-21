@@ -56,6 +56,7 @@ function closeNav() {
     document.getElementById("main").style.marginLeft = "0";
 }
 var obj = {
+    notas: [],
     jugadores: [],
     enemigos: [],
     sizeWidth: 600,
@@ -462,9 +463,67 @@ var obj = {
             contenedor.innerHTML = `${estDia} Time:: Day ${dia.numero} (Min ${dia.mint} Seg ${dia.seg}) <i>${dia.desc}</i><br/>`;
         }
     },
+    nuevNota: () => {
+        var { notas } = obj;
+        var container = document.getElementById('divNotas');
+        container .innerHTML = '';
+        var div = document.createElement('div');
+        var input = document.createElement('textarea');
+        input.setAttribute('id',  'nota');
+        var btn = document.createElement('button');
+        btn.className = 'button2';
+        btn.innerHTML = 'Save';
+        btn.onclick = function(){
+            notas.push({
+                id: ((new Date()).getTime() * parseInt((Math.random()*1000))),
+                nota: document.getElementById('nota').value
+            });
+            document.getElementById('divNotas').innerHTML = '';
+            obj.paintNotas();
+        };
+        div.appendChild(input);
+        div.appendChild(btn);
+        container.appendChild(div);
+    },
+    paintNotas: ()=>{
+        var { notas } = obj;
+        var container = document.getElementById('divNotas');
+        container .innerHTML = '';
+        notas.map(nota=>{
+            var p = document.createElement('p');
+            p.innerHTML = nota.nota;
+            p.style.cursor = "pointer"
+            p.onclick = function(){
+                container .innerHTML = '';
+                var input = document.createElement('textarea');
+                input.setAttribute('id',  'nota');
+                input.value = nota.nota;
+                var btn = document.createElement('button');
+                btn.className = 'button2';
+                btn.innerHTML = 'Save';
+                btn.onclick = function(){
+                    notas.map(n=>{
+                        if(n.id == nota.id){
+                            nota.nota = document.getElementById('nota').value;
+                        }
+                    });
+                    obj.paintNotas();
+                };
+                container.appendChild(input);
+                container.appendChild(btn);
+            };
+            container.appendChild(p);
+            container.appendChild( document.createElement('hr') );
+        });
+    },
+    //----------------------------Save/load------------------------------------------------------------
     saveParty: () => {
         try {
-            var save = { jugadores: [], enemigos: [], mapa: {}, dia: {} };
+            var save = { jugadores: [], enemigos: [], mapa: {}, dia: {}, notas: [] };
+            var nombreParty = document.getElementById('nombreParty');
+            if (nombreParty.value.length == 0) {
+                throw "Error:: Ingresa el nombre de la partida!";
+            }
             obj.jugadores.map(v => { if (v.live) { save.jugadores.push(v); } });
             obj.enemigos.map(v => { if (v.live) { save.enemigos.push(v); } });
             save.mapa = {
@@ -477,11 +536,8 @@ var obj = {
                 image: document.getElementById('mapImagen').value
             };
             save.dia = obj.dia;
-            save.dia.play = false; //Este punto es al momento de cargar l partid este en pusa pero mantenga os valors creados
-            var nombreParty = document.getElementById('nombreParty');
-            if (nombreParty.value.length == 0) {
-                throw "Error:: Ingresa el nombre de la partida!";
-            }
+            save.dia.play = false; //Este punto es al momento de cargar la partid este en pusa pero mantenga os valors creados
+            save.notas = obj.notas;
             var elem = document.getElementById('descargar');
             elem.download = `${nombreParty.value}.txt`;
             elem.href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(save));
@@ -585,6 +641,13 @@ var obj = {
                 } else {
                     throw "Error:: Carga nodo de Dia!";
                 }
+                if (load.hasOwnProperty('notas')) {
+                    obj.notas = load.notas;
+                    obj.paintNotas();
+                    alert('Notas cargados con exito.');
+                } else {
+                    throw "Error:: Carga nodo de Dia!";
+                }
             };
             lector.readAsText(archivo);
             listcharactersEnemy();
@@ -594,5 +657,5 @@ var obj = {
         } catch (error) {
             alert(`${error}`);
         }
-    }
+    },
 };
