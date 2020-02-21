@@ -43,6 +43,15 @@ window.onload = function() {
     };
     document.getElementById('mapImagen').onchange = function() { obj.paintMap(); };
     document.getElementById('loarParty').addEventListener('change', obj.loadParty, false);
+    document.getElementById('mapMultiple').onchange = function() {
+        var valor = parseInt(this.value);
+        if(valor){
+            obj.mapaseparado = true;
+        }else{
+            obj.mapaseparado = false;
+        }
+        obj.paintMap();
+    };
     openNav();
 };
 
@@ -57,6 +66,7 @@ function closeNav() {
 }
 var obj = {
     notas: [],
+    mapaseparado: false, 
     jugadores: [],
     enemigos: [],
     sizeWidth: 600,
@@ -90,12 +100,10 @@ var obj = {
             clases[i].classList.add("esconder");
         }
         document.getElementById(`${show}`).classList.toggle('esconder');
-        if (show == 'divEnemies' || show == '') {
-            document.getElementById('changeCharacterEnemy').innerHTML = '';
-            document.getElementById('detailSheetEnemy').innerHTML = '';
-            document.getElementById('changeCharacter').innerHTML = '';
-            document.getElementById('detailSheet').innerHTML = '';
-        }
+        document.getElementById('changeCharacterEnemy').innerHTML = '';
+        document.getElementById('detailSheetEnemy').innerHTML = '';
+        document.getElementById('changeCharacter').innerHTML = '';
+        document.getElementById('detailSheet').innerHTML = '';
     },
     showDivData: show => {
         var clases = document.getElementsByClassName('cuadroData');
@@ -236,24 +244,30 @@ var obj = {
         jugadores.map(j => {
             if (j.live) {
                 if (j.jugador) {
-                    canvas.ctx.fillStyle = `${j.color}`;
-                    canvas.ctx.font = `${sizeText}px Arial`;
-                    canvas.ctx.fillText(`${j.personaje}`, j.x, j.y - 2);
-                    canvas.ctx.fillStyle = `${j.color}`;
-                    canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
-                    canvas.ctx.beginPath();
+                    if(obj.mapaseparado == false || j.mapa == document.getElementById('mapImagen').value)
+                    {
+                        canvas.ctx.fillStyle = `${j.color}`;
+                        canvas.ctx.font = `${sizeText}px Arial`;
+                        canvas.ctx.fillText(`${j.personaje}`, j.x, j.y - 2);
+                        canvas.ctx.fillStyle = `${j.color}`;
+                        canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
+                        canvas.ctx.beginPath();
+                    }
                 }
             }
         });
         enemigos.map(j => {
             if (j.live) {
                 if (!j.jugador) {
-                    canvas.ctx.fillStyle = `${j.color}`;
-                    canvas.ctx.font = `${sizeText}px Arial`;
-                    canvas.ctx.fillText(`${j.personaje}`, j.x, j.y - 2);
-                    canvas.ctx.fillStyle = `${j.color}`;
-                    canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
-                    canvas.ctx.beginPath();
+                    if(obj.mapaseparado == false || j.mapa == document.getElementById('mapImagen').value)
+                    {
+                        canvas.ctx.fillStyle = `${j.color}`;
+                        canvas.ctx.font = `${sizeText}px Arial`;
+                        canvas.ctx.fillText(`${j.personaje}`, j.x, j.y - 2);
+                        canvas.ctx.fillStyle = `${j.color}`;
+                        canvas.ctx.fillRect(j.x, j.y, sizeGamers, sizeGamers);
+                        canvas.ctx.beginPath();
+                    }
                 }
             }
         });
@@ -272,6 +286,9 @@ var obj = {
         var tabla = document.createElement("table");
         var hilera = document.createElement("tr");
         var celda = document.createElement("th");
+        celda.innerHTML = `<b>Mapa</b>`;
+        hilera.appendChild(celda);
+        var celda = document.createElement("th");
         celda.innerHTML = `<b>Jugador</b>`;
         hilera.appendChild(celda);
         var celda = document.createElement("th");
@@ -286,11 +303,18 @@ var obj = {
                 if (j.jugador) {
                     var hilera = document.createElement("tr");
                     var celda = document.createElement("td");
-                    hilera.onclick = function() {
+                    var selectMaps = obj.createSelecImagenesMap(j.mapa);
+                    selectMaps.onchange = function(){
+                        j.mapa = selectMaps.value;
+                    };
+                    celda.appendChild(selectMaps);
+                    hilera.appendChild(celda);
+                    var celda = document.createElement("td");
+                    celda.onclick = function() {
                         obj.selectorMap = j.id;
                         obj.listWorldGamers();
                     };
-                    hilera.style.cursor = "pointer";
+                    celda.style.cursor = "pointer";
                     var icon = j.clase.icon ? `${j.clase.icon} ${j.clase.nombre} - ${j.raza.nombre}` : '<b>NA</b>';
                     if (j.id == selectorMap) {
                         celda.innerHTML = `&#x265B; ${j.personaje} <span style="color: ${j.color};">${icon}<span>`;
@@ -318,6 +342,9 @@ var obj = {
         var tabla = document.createElement("table");
         var hilera = document.createElement("tr");
         var celda = document.createElement("th");
+        celda.innerHTML = `<b>Mapa</b>`;
+        hilera.appendChild(celda);
+        var celda = document.createElement("th");
         celda.innerHTML = `<b>Enemigo</b>`;
         hilera.appendChild(celda);
         var celda = document.createElement("th");
@@ -341,11 +368,18 @@ var obj = {
                 if (!j.jugador) {
                     var hilera = document.createElement("tr");
                     var celda = document.createElement("td");
-                    hilera.onclick = function() {
+                    var selectMaps = obj.createSelecImagenesMap(j.mapa);
+                    selectMaps.onchange = function(){
+                        j.mapa = selectMaps.value;
+                    };
+                    celda.appendChild(selectMaps);
+                    hilera.appendChild(celda);
+                    var celda = document.createElement("td");
+                    celda.onclick = function() {
                         obj.selectorMap = j.id;
                         obj.listWorldGamers();
                     };
-                    hilera.style.cursor = "pointer";
+                    celda.style.cursor = "pointer";
                     if (j.id == selectorMap) {
                         celda.innerHTML = `&#x265B; ${j.personaje} <span style="color: ${j.color};">&#x2620;<span>`;
                     } else {
@@ -376,6 +410,21 @@ var obj = {
             }
         });
         container.appendChild(tabla);
+    },
+    createSelecImagenesMap: show=>{
+        var select = document.createElement('select');
+        var opt = document.createElement('option');
+        opt.value = `${show}`;
+        opt.text = `${show}`;
+        opt.setAttribute("selected","true");
+        select.appendChild(opt);
+        for (var i = 1; i <= 10; i++){
+            var opt = document.createElement('option');
+            opt.value = `mapas/${i}.jpg`;
+            opt.text = `Mapa ${i}`;
+            select.appendChild(opt);
+        }
+        return select;
     },
     changePlace: (x, y) => {
         var { jugadores, enemigos, selectorMap } = obj;
@@ -577,9 +626,9 @@ var obj = {
                         jugador.datos = j.datos;
                         jugador.armas = j.armas;
                         jugador.transfondos = j.transfondos;
+                        jugador.mapa = j.mapa;
                         jugadores.push(jugador);
                     });
-                    alert('Jugadores cargados con exito.');
                 } else {
                     throw "Error:: Carga nodo de Jugadores!";
                 }
@@ -603,9 +652,9 @@ var obj = {
                         jugador.datos = j.datos;
                         jugador.armas = j.armas;
                         jugador.transfondos = j.transfondos;
+                        jugador.mapa = j.mapa;
                         enemigos.push(jugador);
                     });
-                    alert('Enemigos cargados con exito.');
                 } else {
                     throw "Error:: Carga nodo de Enemigos!";
                 }
@@ -624,7 +673,6 @@ var obj = {
                     document.getElementById('mapSeparacion').value = obj.cuadricula.separacion;
                     document.getElementById('mapGlosorn').value = obj.cuadricula.grosor;
                     document.getElementById('mapText').value = obj.sizeText;
-                    alert('Mapa cargados con exito.');
                 } else {
                     throw "Error:: Carga nodo de Mapa!";
                 }
@@ -637,14 +685,12 @@ var obj = {
                             document.body.style.backgroundColor = "#FFFFFF";
                         }
                     }
-                    alert('Dia cargados con exito.');
                 } else {
                     throw "Error:: Carga nodo de Dia!";
                 }
                 if (load.hasOwnProperty('notas')) {
                     obj.notas = load.notas;
                     obj.paintNotas();
-                    alert('Notas cargados con exito.');
                 } else {
                     throw "Error:: Carga nodo de Dia!";
                 }
@@ -654,6 +700,7 @@ var obj = {
             listWorldGamers();
             listcharacters();
             paintMap();
+            alert(`Partida cargada con exito!!`);
         } catch (error) {
             alert(`${error}`);
         }

@@ -4,12 +4,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <LINK REL=StyleSheet HREF="./mapa.css" TITLE="Contemporaneo">
-    <title>ROL V1.0</title>
+    <title>ROL V1.1</title>
 </head>
 
 <body>
     <div id="mySidenav" class="sidenav">
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><span style="font-size: 20px;">ROL V1.0 </span>&times;</a>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><span style="font-size: 20px;">ROL V1.1 </span>&times;</a>
         <input id="calculadora" placeholder="2+3" type="search" />
         <span style="color: #f1f1f1;" id="resultado"><b>= 0</b></span>
         <hr/>
@@ -45,8 +45,21 @@
 					<option value="mapas/8.jpg">Mapa 8</option>
 					<option value="mapas/9.jpg">Mapa 9</option>
 					<option value="mapas/10.jpg">Mapa 10</option>
-				</select> Width: <input type="number" id="mapSizeWidth" size="4" /> Height: <input type="number" id="mapSizeHeight" size="4" /> size Gamers: <input type="number" id="mapSizeGamers" size="4" />
-                <br/> Color: <input type="color" id="mapcolor"> Interval: <input type="number" id="mapSeparacion" size="4" /> Thickness: <input type="number" id="mapGlosorn" size="4" /> Text: <input type="number" id="mapText" size="4" />
+                </select>
+                Width: <input type="number" id="mapSizeWidth" size="4" /> 
+                Height: <input type="number" id="mapSizeHeight" size="4" /> 
+                size Gamers: <input type="number" id="mapSizeGamers" size="4" />
+                <br/> 
+                Color: <input type="color" id="mapcolor"> 
+                Interval: <input type="number" id="mapSeparacion" size="4" /> 
+                Thickness: <input type="number" id="mapGlosorn" size="4" /> 
+                Text: <input type="number" id="mapText" size="4" />
+                <br/>
+                Mapa multiple: <select name="mapMultiple" id="mapMultiple">
+					<option value="0">NO</option>
+					<option value="1">SI</option>
+                </select>
+                <br/>
                 <span class="puntero" onclick="obj.paintMap();">| Paint</span>
             </div>
             <div id="world"></div>

@@ -27,6 +27,7 @@ var Jugador = function(tipo){
 	this.datos = publictDatos;
 	this.armas = [/*id, nombe, cantidad, puntos, tipo(armas, equipmiento, talentos)*/];
 	this.transfondos =  '';
+	this.mapa =  '';
 };
 
 Jugador.prototype.eliminar = function(){
