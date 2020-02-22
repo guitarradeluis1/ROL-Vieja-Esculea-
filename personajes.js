@@ -191,7 +191,8 @@ Jugador.prototype.ficha = function(lugar, show){
 			per.habilidades.some(ida=>{  
 				if(ida.nombre == a.nombre){
 					ida.puntos = ida.puntos + 1;
-					temp = `${a.nombre}: <b>${a.puntos}</b>  `;
+					//temp = `${a.nombre}: <b>${a.puntos}</b>  `;
+					per.ficha(lugar, show);
 				}
 			});
 		};
@@ -203,7 +204,8 @@ Jugador.prototype.ficha = function(lugar, show){
 			per.habilidades.some(ida=>{  
 				if(ida.nombre == a.nombre){
 					ida.puntos = ida.puntos - 1;
-					document.getElementById(`${a.nombre}${per.id}`).innerHTML = `${a.nombre}: <b>${a.puntos}</b>  `;
+					//document.getElementById(`${a.nombre}${per.id}`).innerHTML = `${a.nombre}: <b>${a.puntos}</b>  `;
+					per.ficha(lugar, show);
 				}
 			});
 		};
