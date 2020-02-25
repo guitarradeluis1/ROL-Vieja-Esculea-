@@ -23,22 +23,8 @@ var Jugador = function(tipo){
 	this.jugador = tipo;
 	this.raza = {};
 	this.clase = {};
-	this.habilidades = [
-		{nombre:'Alerta', puntos: 0},
-		{nombre:'Comunicacion', puntos: 0},
-		{nombre:'Manipulacion', puntos: 0},
-		{nombre:'Erudicion', puntos: 0},
-		{nombre:'Subterfugio', puntos: 0},
-		{nombre:'Supervivencia', puntos: 0},
-	];//publictHabilidades;
-	this.datos = [
-		{nombre:'Fuerza', pref:'FUE', puntos: 0},
-		{nombre:'Destreza', pref:'DES', puntos: 0},
-		{nombre:'Constitucion', pref:'CON', puntos: 0},
-		{nombre:'Inteligencia', pref:'INT', puntos: 0},
-		{nombre:'Sabiduria', pref:'SAB', puntos: 3},
-		{nombre:'Carisma', pref:'CAR', puntos: 0},
-	];//publictDatos;
+	this.habilidades = JSON.parse(JSON.stringify(publictHabilidades)); //publictHabilidades;
+	this.datos = JSON.parse(JSON.stringify(publictDatos)); //publictDatos;
 	this.armas = [/*id, nombe, cantidad, puntos, tipo(armas, equipmiento, talentos)*/];
 	this.transfondos =  '';
 	this.mapa =  '';
