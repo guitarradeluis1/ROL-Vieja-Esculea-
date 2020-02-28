@@ -538,8 +538,15 @@ var obj = {
         var { notas } = obj;
         var container = document.getElementById('divNotas');
         container .innerHTML = '';
+        var tabla = document.createElement("table");
+        var hilera = document.createElement("tr");
+        var celda = document.createElement("th");
+        celda.innerHTML = `<b>Notas</b>`;
+        hilera.appendChild(celda);
+        tabla.appendChild(hilera);
         notas.map(nota=>{
-            var p = document.createElement('p');
+            var hilera = document.createElement("tr");
+            var p = document.createElement('td');
             p.innerHTML = nota.nota;
             p.style.cursor = "pointer"
             p.onclick = function(){
@@ -561,9 +568,35 @@ var obj = {
                 container.appendChild(input);
                 container.appendChild(btn);
             };
-            container.appendChild(p);
-            container.appendChild( document.createElement('hr') );
+            hilera.appendChild(p);
+            tabla.appendChild(hilera);
         });
+        container.appendChild(tabla);
+    },
+    fichaImagen: ()=>{
+        /*
+        var { jugadores } = obj;
+        let sizeWidth = 200;
+        let sizeHeight = 400;
+        var divCanvas = document.getElementById('fichaImagen');
+        divCanvas.innerHTML = '';
+        divCanvas.style.width = `${sizeWidth}px`;
+        divCanvas.style.height = `${sizeHeight}px`;
+        var canvasHtml = `<canvas id="canvasFicha" width="${sizeWidth}" height="${sizeHeight}">Tu navegador no soporta html5...</canvas>`;
+        divCanvas.innerHTML = canvasHtml;
+        canvas = document.getElementById("canvasFicha");
+        canvas.ctx = canvas.getContext("2d");
+        var fondo = 'hojas/hv1.png';
+        canvas.ctx.drawImage(fondo, 0, 0, sizeWidth, sizeHeight);
+        */
+        /*
+        jugadores.map(j => {
+            j.select = false;
+            if (j.id == id) {
+                j.select = true;
+                j.ficha('changeCharacter', 'detailSheet');
+            }
+        });*/
     },
     //----------------------------Save/load------------------------------------------------------------
     saveParty: () => {
