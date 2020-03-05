@@ -74,10 +74,10 @@
             <div id="changeCharacter"></div>
             <div id="detailSheet"></div>
             <hr/>
-            <!--div>
+            <div>
                 <button onclick="obj.fichaImagen();" class="button2">Ficha en imagen</button>
                 <div id="fichaImagen"></div>
-            </div-->
+            </div>
         </div>
         <div id="divEnemies" class="cuadro esconder">
             <div>
@@ -89,6 +89,10 @@
                 <div id="changeCharacterEnemy"></div>
                 <div id="detailSheetEnemy"></div>
             </div>
+            <hr/>
+            <button onclick="obj.saveEnemi();" class="button2">Guardar Enemigo selecionado</button>
+            Load Enemi (Enemigo.txt)<input type="file" id="loadEnemi" class="button1" id="file-input" />
+            <a id="descargarEnemigo" class="esconder">descarga</a>
         </div>
         <div id="divAccountant" class="cuadro esconder">
             <div>
@@ -148,5 +152,4 @@
     <script src='./clases.js'></script>
     <script src='./contador.js'></script>
 </body>
-
 </html>

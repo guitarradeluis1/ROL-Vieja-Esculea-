@@ -43,6 +43,7 @@ window.onload = function() {
     };
     document.getElementById('mapImagen').onchange = function() { obj.paintMap(); };
     document.getElementById('loarParty').addEventListener('change', obj.loadParty, false);
+    document.getElementById('loadEnemi').addEventListener('change', obj.loadEnemi, false);
     document.getElementById('mapMultiple').onchange = function() {
         var valor = parseInt(this.value);
         if(valor){
@@ -574,29 +575,156 @@ var obj = {
         container.appendChild(tabla);
     },
     fichaImagen: ()=>{
-        /*
         var { jugadores } = obj;
-        let sizeWidth = 200;
-        let sizeHeight = 400;
+        let sizeWidth = 500;
+        let sizeHeight = 650;
         var divCanvas = document.getElementById('fichaImagen');
-        divCanvas.innerHTML = '';
-        divCanvas.style.width = `${sizeWidth}px`;
-        divCanvas.style.height = `${sizeHeight}px`;
-        var canvasHtml = `<canvas id="canvasFicha" width="${sizeWidth}" height="${sizeHeight}">Tu navegador no soporta html5...</canvas>`;
-        divCanvas.innerHTML = canvasHtml;
-        canvas = document.getElementById("canvasFicha");
-        canvas.ctx = canvas.getContext("2d");
-        var fondo = 'hojas/hv1.png';
-        canvas.ctx.drawImage(fondo, 0, 0, sizeWidth, sizeHeight);
-        */
-        /*
         jugadores.map(j => {
-            j.select = false;
-            if (j.id == id) {
-                j.select = true;
-                j.ficha('changeCharacter', 'detailSheet');
+            if (j.live) {
+                if (j.jugador) {
+                    if (j.select){
+                        if(j.hasOwnProperty('clase')){
+                            if(j.hasOwnProperty('raza')){
+                                divCanvas.innerHTML = '';
+                                divCanvas.style.width = `${sizeWidth}px`;
+                                divCanvas.style.height = `${sizeHeight}px`;
+                                var canvasHtml = `<canvas id="canvasFicha" width="${sizeWidth}" height="${sizeHeight}">Tu navegador no soporta html5...</canvas>`;
+                                divCanvas.innerHTML = canvasHtml;
+                                canvas = document.getElementById("canvasFicha");
+                                canvas.ctx = canvas.getContext("2d");
+                                var fondo = new Image();
+                                fondo.src ='hojas/hv1.png';
+                                canvas.ctx.drawImage(fondo, 0, 0, sizeWidth, sizeHeight);
+                                canvas.ctx.fillStyle = `#0046FF`;
+                                canvas.ctx.font = "20px Arial Black";
+                                canvas.ctx.fillText(`${j.personaje}`, 160, 50);
+                                canvas.ctx.fillText(`${j.raza.nombre}`, 270, 50);
+                                canvas.ctx.fillText(`${j.clase.nombre}`, 390, 50);
+                                canvas.ctx.fillText(`${j.nivel}`, 45, 144);
+                                canvas.ctx.fillText(`${j.exp}`, 99, 144);
+                                var salto = 29;
+                                var tempy = 223;
+                                var tempCount = 0;
+                                j.habilidades.map(da=>{
+                                    canvas.ctx.fillText(`${da.puntos}`, 125, tempy);
+                                    tempy = tempy + salto;
+                                });
+                                var arayDatos = [];
+                                j.datos.map(ha=>{
+                                    arayDatos[ha.pref] = ha.puntos;
+                                });
+                                canvas.ctx.fillText(`${arayDatos['FUE']}`, 250, 200);
+                                canvas.ctx.fillText(`${arayDatos['DES']}`, 250, 245);
+                                canvas.ctx.fillText(`${arayDatos['CON']}`, 250, 290);
+                                canvas.ctx.fillText(`${arayDatos['INT']}`, 250, 340);
+                                canvas.ctx.fillText(`${arayDatos['SAB']}`, 250, 385);
+                                canvas.ctx.fillText(`${arayDatos['CAR']}`, 250, 435);
+                                canvas.ctx.font = "10px Arial Black";                                
+                                var salto = 20;
+                                var tempy = 105;
+                                var tempCount = 0;
+                                j.armas.map(da=>{
+                                    if(da.tipo == 'talents'){
+                                        if(tempCount < 3){
+                                            canvas.ctx.fillText(`${da.nombre} (${da.cantidad}) puntos:${da.puntos}`, 160, tempy);
+                                            tempy = tempy + salto;
+                                            tempCount++;
+                                        }
+                                    }
+                                });
+                                var salto = 20;
+                                var tempy = 500;
+                                var tempCount = 0;
+                                j.armas.map(da=>{
+                                    if(da.tipo == 'armas'){
+                                        if(tempCount < 7){
+                                            canvas.ctx.fillText(`${da.nombre} (${da.cantidad}) puntos:${da.puntos}`, 30, tempy);
+                                            tempy = tempy + salto;
+                                            tempCount++;
+                                        }
+                                    }
+                                });
+                                var salto = 20;
+                                var tempy = 500;
+                                var tempCount = 0;
+                                j.armas.map(da=>{
+                                    if(da.tipo == 'equipamiento'){
+                                        if(tempCount < 7){
+                                            canvas.ctx.fillText(`${da.nombre} (${da.cantidad}) puntos:${da.puntos}`, 260, tempy);
+                                            tempy = tempy + salto;
+                                            tempCount++;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
             }
-        });*/
+        });
+    },
+    //----------------------------Save/load Enemi------------------------------------------------------
+    saveEnemi: ()=>{
+        var { enemigos } = obj;
+        enemigos.map(j => {
+            if (j.live) {
+                if (!j.jugador) {
+                    if (j.select) {
+                        var elem = document.getElementById('descargarEnemigo');
+                        elem.download = `${j.personaje}.txt`;
+                        elem.href = "data:application/octet-stream," + encodeURIComponent(JSON.stringify(j));
+                        elem.click();
+                    }
+                }
+            }
+        });
+    },
+    loadEnemi: e =>{
+        try {
+            var { enemigos, listcharactersEnemy, listcharacters, listWorldGamers, paintMap } = obj;
+            var archivo = e.target.files[0];
+            if (!archivo) {
+                throw "Error:: Carga de archivo!";
+            }
+            var lector = new FileReader();
+            lector.onload = function(e) {
+                var contenido = e.target.result;
+                var load = JSON.parse(contenido);
+                console.log(load);
+                if (load.hasOwnProperty('id')) {
+                    var jugador = new Jugador(false);
+                    jugador.id = ((new Date()).getTime() * parseInt((Math.random() * 1000)));
+                    jugador.live = true;
+                    jugador.select = false;
+                    jugador.x = load.x;
+                    jugador.y = load.y;
+                    jugador.oro = load.oro;
+                    jugador.exp = load.exp;
+                    jugador.nivel = load.nivel;
+                    jugador.nombre = load.nombre;
+                    jugador.personaje = load.personaje;
+                    jugador.color = load.color;
+                    jugador.raza = load.raza;
+                    jugador.clase = load.clase;
+                    jugador.habilidades = load.habilidades;
+                    jugador.datos = load.datos;
+                    jugador.armas = load.armas;
+                    jugador.transfondos = load.transfondos;
+                    jugador.mapa = load.mapa;
+                    enemigos.push(jugador);
+                } else {
+                    throw "Error:: Carga nodo de Jugadores!";
+                }
+            };
+            lector.readAsText(archivo);
+            listcharactersEnemy();
+            listWorldGamers();
+            listcharacters();
+            paintMap();
+            alert(`Enemigo cargado con exito!!`);
+        } catch (error) {
+            alert(`${error}`);
+        }
     },
     //----------------------------Save/load------------------------------------------------------------
     saveParty: () => {
