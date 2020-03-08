@@ -129,9 +129,9 @@ var obj = {
         jugadores.map(j => {
             if (j.live) {
                 if (j.jugador) {
-                    var a = document.createElement("a");
+                    var a = document.createElement("button");
                     a.onclick = function() { seleccion(j.id); };
-                    a.setAttribute("href", "#");
+                    a.className = `button1`;
                     if (j.select) {
                         a.innerHTML = `&#x265B; ${j.personaje}`;
                     } else {
@@ -176,9 +176,9 @@ var obj = {
         enemigos.map(j => {
             if (j.live) {
                 if (!j.jugador) {
-                    var a = document.createElement("a");
+                    var a = document.createElement("button");
                     a.onclick = function() { seleccionEnemy(j.id); };
-                    a.setAttribute("href", "#");
+                    a.className = `button1`;
                     if (j.select) {
                         a.innerHTML = `&#x265B; ${j.personaje}`;
                     } else {

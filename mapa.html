@@ -12,8 +12,14 @@
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()"><span style="font-size: 20px;">ROL V1.1 </span>&times;</a>
         <input id="calculadora" placeholder="2+3" type="search" />
         <span style="color: #f1f1f1;" id="resultado"><b>= 0</b></span>
-        <hr/>
-        <div id="lischaracters"></div>
+        <hr/>        |
+        <a class="puntero" href="#" onclick="obj.showDiv('divSheet');">&#x268F; Sheet </a><br/>
+        <a class="puntero" href="#" onclick="obj.showDiv('divEnemies');">&#x2620; Enemies </a><br/>
+        <a class="puntero" href="#" onclick="obj.showDiv('divMap');">&#x2694; Map </a><br/>
+        <a class="puntero" href="#" onclick="obj.showDiv('divData');">&#x2696; Data </a><br/>
+        <a class="puntero" href="#" onclick="obj.showDiv('divAccountant');">&#x2686; Accountant </a><br/>
+        <a class="puntero" href="#" onclick="obj.showDiv('divSave');"> Save/Load </a><br/>
+        <!--span class="puntero" onclick="obj.showDiv('divDie');">&#x2685; Die </span>|-->
     </div>
     <div id="main">
         <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#x263A; Characters</span>
@@ -23,14 +29,6 @@
         <span class="puntero" onclick="obj.setTiempo();"><b>Seting,</b></span>
         <span class="puntero" onclick="obj.initDia();"><b>Start,</b></span>
         <span class="puntero" onclick="obj.stopTime();"><b>Pause</b></span>
-        <hr/> |
-        <span class="puntero" onclick="obj.showDiv('divMap');">&#x2694; Map </span>|
-        <span class="puntero" onclick="obj.showDiv('divSheet');">&#x268F; Sheet </span>|
-        <span class="puntero" onclick="obj.showDiv('divEnemies');">&#x2620; Enemies </span>|
-        <span class="puntero" onclick="obj.showDiv('divData');">&#x2696; Data </span>|
-        <span class="puntero" onclick="obj.showDiv('divAccountant');">&#x2686; Accountant </span>|
-        <span class="puntero" onclick="obj.showDiv('divSave');"> Save/Load </span>|
-        <!--span class="puntero" onclick="obj.showDiv('divDie');">&#x2685; Die </span>|-->
         <hr/>
         <div id="divMap" class="cuadro esconder">
             <div>
@@ -67,6 +65,7 @@
             <div id="worldGamers"></div>
         </div>
         <div id="divSheet" class="cuadro">
+            <div id="lischaracters"></div>
             <div>
                 <span class="puntero" onclick="obj.newCharacter();"> + New Character </span>
             </div>
