@@ -356,6 +356,9 @@ Jugador.prototype.createselectClases = function(lugar, id){
 	select.onchange = function(){
 		var claseSelecion = publictClases.filter(se=>se.id == select.value);
 		per.clase = claseSelecion[0];
+		if(per.clase.hasOwnProperty('talents')){
+			per.clase.talents.map(ta =>{ per.armas.push(ta); });
+		}
 		var show = document.getElementById(id);
 		show.innerHTML = `Class : <b>${per.clase.nombre}</b> `
 	};
@@ -386,6 +389,9 @@ Jugador.prototype.createselectRace = function(lugar, id){
 	select.onchange = function(){
 		var raceSelecion = publictRaza.filter(se=>se.id == select.value);
 		per.raza = raceSelecion[0];
+		if(per.raza.hasOwnProperty('talents')){
+			per.raza.talents.map(ta =>{ per.armas.push(ta); });
+		}
 		var show = document.getElementById(id);
 		show.innerHTML = `Race : <b>${per.raza.nombre}</b> `
 	};

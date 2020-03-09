@@ -1,8 +1,20 @@
 //Editable
 var publictClases = [
-    {id: 0, nombre:'Guerrero', da: 8, icon: '&#x269C;'},
-    {id: 1, nombre:'Hechicero', da: 4, icon: '&#x2606;'},
-    {id: 2, nombre:'Bribon', da: 6, icon: '&#x2618;'},
+    {id: 0, nombre:'Guerrero', da: 8, icon: '&#x269C;',
+        talents: [
+            { id: 1, nombre: 't1', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
+    {id: 1, nombre:'Hechicero', da: 4, icon: '&#x2606;',
+        talents: [
+            { id: 1, nombre: 't2', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
+    {id: 2, nombre:'Bribon', da: 6, icon: '&#x2618;',
+        talents: [
+            { id: 1, nombre: 't3', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
 ];
 var publictTablaClasesNivel = [
     //Guerrero
@@ -53,11 +65,31 @@ var publictTablaClasesNivel = [
 ];
 //Editable
 var publictRaza = [
-    {id: 0, nombre:'Enano', mov: 9},
-	{id: 1, nombre:'Mediano', mov: 9},
-	{id: 2, nombre:'Humano', mov: 12},
-	{id: 3, nombre:'Elfo', mov: 12},
-	{id: 4, nombre:'Humano', mov: 12},
+    {id: 0, nombre:'Enano', mov: 9,
+        talents: [
+            { id: 1, nombre: 'r1', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
+	{id: 1, nombre:'Mediano', mov: 9,
+        talents: [
+            { id: 1, nombre: 'r2', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
+	{id: 2, nombre:'Humano', mov: 12,
+        talents: [
+            { id: 1, nombre: 'r3', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
+	{id: 3, nombre:'Elfo', mov: 12,
+        talents: [
+            { id: 1, nombre: 'r4', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
+	{id: 4, nombre:'Humano', mov: 12,
+        talents: [
+            { id: 1, nombre: 'r5', cantidad: 1, puntos: 1, tipo: 'talents' },
+        ]
+    },
 ];
 //Carga en constructor
 var publictDatos = [
