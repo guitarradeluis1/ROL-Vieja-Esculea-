@@ -2,17 +2,20 @@
 var publictClases = [
     {id: 0, nombre:'Guerrero', da: 8, icon: '&#x269C;',
         talents: [
-            { id: 1, nombre: 't1', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 1, nombre: 'Lucha con X', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 2, nombre: 'Ataque Multiple', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
     {id: 1, nombre:'Hechicero', da: 4, icon: '&#x2606;',
         talents: [
-            { id: 1, nombre: 't2', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 3, nombre: 'Sensibilidad Magica', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 4, nombre: 'Transferir Energia', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
     {id: 2, nombre:'Bribon', da: 6, icon: '&#x2618;',
         talents: [
-            { id: 1, nombre: 't3', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 5, nombre: 'Emboscada', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 6, nombre: 'Dedos Agiles', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
 ];
@@ -67,27 +70,26 @@ var publictTablaClasesNivel = [
 var publictRaza = [
     {id: 0, nombre:'Enano', mov: 9,
         talents: [
-            { id: 1, nombre: 'r1', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 7, nombre: 'Afinidad a la piedra', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 8, nombre: 'Infravisión', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
 	{id: 1, nombre:'Mediano', mov: 9,
         talents: [
-            { id: 1, nombre: 'r2', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 9, nombre: 'Escurridizo', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 10, nombre: 'Certero', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
 	{id: 2, nombre:'Humano', mov: 12,
         talents: [
-            { id: 1, nombre: 'r3', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 11, nombre: 'Impetu Emprendedor', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 12, nombre: 'Adaptable', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
 	{id: 3, nombre:'Elfo', mov: 12,
         talents: [
-            { id: 1, nombre: 'r4', cantidad: 1, puntos: 1, tipo: 'talents' },
-        ]
-    },
-	{id: 4, nombre:'Humano', mov: 12,
-        talents: [
-            { id: 1, nombre: 'r5', cantidad: 1, puntos: 1, tipo: 'talents' },
+            { id: 13, nombre: 'Vista aguda', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 14, nombre: 'Infravisión', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
 ];
