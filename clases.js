@@ -89,7 +89,7 @@ var publictRaza = [
 	{id: 3, nombre:'Elfo', mov: 12,
         talents: [
             { id: 13, nombre: 'Vista aguda', cantidad: 0, puntos: 0, tipo: 'talents' },
-            { id: 14, nombre: 'Infravisión', cantidad: 0, puntos: 0, tipo: 'talents' },
+            { id: 14, nombre: 'Infravision', cantidad: 0, puntos: 0, tipo: 'talents' },
         ]
     },
 ];

@@ -218,6 +218,7 @@ var obj = {
         canvas.addEventListener('click', function(evt) {
             var mousePos = getMousePos(canvas, evt);
             document.getElementById("posicionEjemplo").innerHTML = `${mousePos.x}, ${mousePos.y}`;
+            //console.log(`${mousePos.x}, ${mousePos.y}`);
             obj.changePlace(mousePos.x, mousePos.y);
             obj.listWorldGamers();
             obj.paintMap();
@@ -625,7 +626,7 @@ var obj = {
                                 var tempCount = 0;
                                 j.armas.map(da=>{
                                     if(da.tipo == 'talents'){
-                                        if(tempCount < 3){
+                                        if(tempCount < 4){
                                             canvas.ctx.fillText(`${da.nombre} (${da.cantidad}) puntos:${da.puntos}`, 160, tempy);
                                             tempy = tempy + salto;
                                             tempCount++;
