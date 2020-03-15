@@ -19,7 +19,7 @@ var Jugador = function(tipo){
 	this.nivel = 1;
 	this.nombre = 'pending';
 	this.personaje = 'pending';
-	this.color =  tipo?"#818181":'red'; //ingles
+	this.color =  tipo? "#818181":'red'; //ingles
 	this.jugador = tipo;
 	this.raza = {};
 	this.clase = {};
@@ -28,6 +28,7 @@ var Jugador = function(tipo){
 	this.armas = [/*id, nombe, cantidad, puntos, tipo(armas, equipmiento, talentos)*/];
 	this.transfondos =  '';
 	this.mapa =  '';
+	this.imagen =  '';
 };
 
 Jugador.prototype.eliminar = function(){
@@ -99,16 +100,25 @@ Jugador.prototype.ficha = function(lugar, show){
 
 	div.appendChild( document.createElement('br') );
 	div.appendChild( document.createElement('br') );
-	var addClase = document.createElement('button');
-	addClase.className = 'button1';
-	addClase.innerHTML = 'Add Class';
-	addClase.onclick = function(){ per.createselectClases(lugar, `cl${per.id}`); };
-	div.appendChild(addClase);
-	var addRaza = document.createElement('button');
-	addRaza.className = 'button1';
-	addRaza.innerHTML = 'Add Race';
-	addRaza.onclick = function(){ per.createselectRace(lugar, `rc${per.id}`); };
-	div.appendChild(addRaza);
+	if(!this.clase.hasOwnProperty('nombre')){
+		var addClase = document.createElement('button');
+		addClase.className = 'button1';
+		addClase.innerHTML = 'Add Class';
+		addClase.onclick = function(){ per.createselectClases(lugar, `cl${per.id}`); };
+		div.appendChild(addClase);
+	}
+	if(!this.raza.hasOwnProperty('nombre')){
+		var addRaza = document.createElement('button');
+		addRaza.className = 'button1';
+		addRaza.innerHTML = 'Add Race';
+		addRaza.onclick = function(){ per.createselectRace(lugar, `rc${per.id}`); };
+		div.appendChild(addRaza);
+	}
+	var addImage = document.createElement('button');
+	addImage.className = 'button1';
+	addImage.innerHTML = 'Add Image';
+	addImage.onclick = function(){ per.createImage(lugar); };
+	div.appendChild(addImage);
 	div.appendChild( document.createElement('br') );
 	div.appendChild( document.createElement('br') );
 	var btnEliminar = document.createElement('button');
@@ -226,6 +236,19 @@ Jugador.prototype.ficha = function(lugar, show){
 	diveq.appendChild( per.pintarList(per.armas, 'talents') );
 	diveq.appendChild( per.pintarBtnSave('talents', 'talents', lugar, show) );
 	divsupremo.appendChild(diveq);
+	//----------------------------------
+	if(this.imagen != ''){
+		var divimg = document.createElement('div');
+		divimg.className = 'cudro';
+		var titulo = document.createElement('p');
+		titulo.innerHTML = `<h3>Imagen</h3>`
+		divimg.appendChild(titulo);
+			var img = document.createElement('img');
+			img.src = this.imagen
+			img.style.width = '30%';
+			divimg.appendChild(img);
+		divsupremo.appendChild(divimg);
+	}
 	//----------------------------------
 	var text = document.createElement('textarea');
 	text.rows = "4";
@@ -394,6 +417,44 @@ Jugador.prototype.createselectRace = function(lugar, id){
 		}
 		var show = document.getElementById(id);
 		show.innerHTML = `Race : <b>${per.raza.nombre}</b> `
+	};
+	div.appendChild(select);
+	var cancel = document.createElement('button');
+	cancel.className = 'button3';
+	cancel.innerHTML = 'Cancel';
+	cancel.onclick = function(){ per.cancelEdicion(lugar); };
+	div.appendChild(cancel);
+}
+
+Jugador.prototype.createImage = function(lugar){
+	var per = this;
+	var div = document.getElementById(`${lugar}`);
+	div.innerHTML = ``;
+	var select = document.createElement('input');
+	select.type = 'file';
+	select.onchange = function(){
+		var allowedExtensions = /(.jpg|.jpeg|.png)$/i;
+		if(!allowedExtensions.exec(select.value)){
+			alert(`Please upload file having extensions .jpeg/.jpg/.png only.`);
+			select.value = '';
+		}else{
+			var attached = new FormData();
+			attached.append('media', select.files[0]);
+			attached.append('name', select.files[0].name);
+			attached.append('size', select.files[0].size);
+			attached.append('type', select.files[0].type);
+			var fileSize = select.files[0].size / 1024 / 1024; // in MB
+			if (fileSize > 10) {
+				alert("File size exceeds 10 MB!");
+			} else {
+                var fr = new FileReader();
+                fr.addEventListener("load", function(e){
+					per.imagen = e.target.result;
+					alert('Imagen Cargada!!');
+                });
+                fr.readAsDataURL( select.files[0] );
+			}
+		}
 	};
 	div.appendChild(select);
 	var cancel = document.createElement('button');

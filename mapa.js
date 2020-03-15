@@ -657,6 +657,13 @@ var obj = {
                                         }
                                     }
                                 });
+                                if(j.imagen != ''){
+                                    var image = new Image();
+                                    image.onload = function() {
+                                        canvas.ctx.drawImage(image, 0, 0, 50, 100);
+                                    };
+                                    image.src = j.imagen;
+                                }
                             }
                         }
                     }
@@ -712,6 +719,7 @@ var obj = {
                     jugador.armas = load.armas;
                     jugador.transfondos = load.transfondos;
                     jugador.mapa = load.mapa;
+                    jugador.imagen = load.imagen;
                     enemigos.push(jugador);
                 } else {
                     throw "Error:: Carga nodo de Jugadores!";
@@ -726,6 +734,7 @@ var obj = {
         } catch (error) {
             alert(`${error}`);
         }
+        document.getElementById('loadEnemi').value = '';
     },
     //----------------------------Save/load------------------------------------------------------------
     saveParty: () => {
@@ -789,6 +798,7 @@ var obj = {
                         jugador.armas = j.armas;
                         jugador.transfondos = j.transfondos;
                         jugador.mapa = j.mapa;
+                        jugador.imagen = j.imagen;
                         jugadores.push(jugador);
                     });
                 } else {
@@ -815,6 +825,7 @@ var obj = {
                         jugador.armas = j.armas;
                         jugador.transfondos = j.transfondos;
                         jugador.mapa = j.mapa;
+                        jugador.imagen = j.imagen;
                         enemigos.push(jugador);
                     });
                 } else {
@@ -866,5 +877,6 @@ var obj = {
         } catch (error) {
             alert(`${error}`);
         }
+        document.getElementById('loarParty').value = '';
     },
 };
