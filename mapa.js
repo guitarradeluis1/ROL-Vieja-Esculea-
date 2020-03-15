@@ -660,7 +660,7 @@ var obj = {
                                 if(j.imagen != ''){
                                     var image = new Image();
                                     image.onload = function() {
-                                        canvas.ctx.drawImage(image, 0, 0, 50, 100);
+                                        canvas.ctx.drawImage(image, 20, 370, 90, 90);
                                     };
                                     image.src = j.imagen;
                                 }
