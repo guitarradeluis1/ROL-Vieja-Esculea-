@@ -102,6 +102,14 @@ var publictDatos = [
     {nombre:'Sabiduria', pref:'SAB', puntos: 3},
     {nombre:'Carisma', pref:'CAR', puntos: 0},
 ];
+var publictPuntos = [
+    {nombre: 'PV', puntos: 0},
+    {nombre: 'DEF', puntos: 0},
+    {nombre: 'MOV', puntos: 0},
+    {nombre: 'ATQ', puntos: 0},
+    {nombre: 'INST', puntos: 0},
+    {nombre: 'POD', puntos: 0},
+];
 //Carga en constructor // NOTA: el nombre no se puede repetir!!!!
 var publictHabilidades = [
     {nombre:'Alerta', puntos: 0},

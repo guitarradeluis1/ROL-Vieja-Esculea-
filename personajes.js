@@ -25,6 +25,7 @@ var Jugador = function(tipo){
 	this.clase = {};
 	this.habilidades = JSON.parse(JSON.stringify(publictHabilidades)); //publictHabilidades;
 	this.datos = JSON.parse(JSON.stringify(publictDatos)); //publictDatos;
+	this.puntos = JSON.parse(JSON.stringify(publictPuntos)); //publictPuntos;
 	this.armas = [/*id, nombe, cantidad, puntos, tipo(armas, equipmiento, talentos)*/];
 	this.transfondos =  '';
 	this.mapa =  '';
@@ -136,6 +137,39 @@ Jugador.prototype.ficha = function(lugar, show){
 	var titulo = document.createElement('p');
 	titulo.innerHTML = `<h3>Data</h3>`
 	divda.appendChild(titulo);
+	per.puntos.map(a=>{
+		var temp = document.createElement('span');
+		temp.innerHTML = `${a.nombre}: <b>${a.puntos}</b>  `;
+		divda.appendChild(temp);
+		var sum = document.createElement('button');
+		sum.className = 'button1';
+		sum.innerHTML = '+';
+		sum.onclick = function(){
+			per.puntos.map(ida=>{  
+				if(ida.nombre == a.nombre){
+					ida.puntos = ida.puntos + 1;
+					//temp.innerHTML = `${a.pref}: <b>${a.puntos}</b>  `;
+					per.ficha(lugar, show);
+				}
+			});
+		};
+		divda.appendChild(sum);
+		var men = document.createElement('button');
+		men.className = 'button2';
+		men.innerHTML = '-';
+		men.onclick = function(){
+			per.puntos.map(ida=>{  
+				if(ida.nombre == a.nombre){
+					ida.puntos = ida.puntos - 1;
+					//temp.innerHTML = `${a.pref}: <b>${a.puntos}</b>  `;
+					per.ficha(lugar, show);
+				}
+			});
+		};
+		divda.appendChild(men);
+		divda.appendChild( document.createElement('br') );
+	});
+	divda.appendChild( document.createElement('hr') );
 	per.datos.map(a=>{
 		var temp = document.createElement('span');
 		temp.innerHTML = `${a.pref}: <b>${a.puntos}</b>  `;
