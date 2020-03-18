@@ -514,7 +514,7 @@ var obj = {
             contenedor.innerHTML = `${estDia} Time:: Day ${dia.numero} (Min ${dia.mint} Seg ${dia.seg}) <i>${dia.desc}</i><br/>`;
         }
     },
-    nuevNota: () => {
+    nuevaNota: () => {
         var { notas } = obj;
         var container = document.getElementById('divNotas');
         container .innerHTML = '';
@@ -527,7 +527,8 @@ var obj = {
         btn.onclick = function(){
             notas.push({
                 id: ((new Date()).getTime() * parseInt((Math.random()*1000))),
-                nota: document.getElementById('nota').value
+                nota: document.getElementById('nota').value,
+                detalles: []
             });
             document.getElementById('divNotas').innerHTML = '';
             obj.paintNotas();
@@ -541,17 +542,11 @@ var obj = {
         var container = document.getElementById('divNotas');
         container .innerHTML = '';
         var tabla = document.createElement("table");
-        var hilera = document.createElement("tr");
-        var celda = document.createElement("th");
-        celda.innerHTML = `<b>Notas</b>`;
-        hilera.appendChild(celda);
-        tabla.appendChild(hilera);
         notas.map(nota=>{
             var hilera = document.createElement("tr");
-            var p = document.createElement('td');
-            p.innerHTML = nota.nota;
-            p.style.cursor = "pointer"
-            p.onclick = function(){
+            var celda = document.createElement("th");
+            celda.innerHTML = `<b>${nota.nota}</b>`;
+            celda.onclick = function(){
                 container .innerHTML = '';
                 var input = document.createElement('textarea');
                 input.setAttribute('id',  'nota');
@@ -570,7 +565,68 @@ var obj = {
                 container.appendChild(input);
                 container.appendChild(btn);
             };
-            hilera.appendChild(p);
+            hilera.appendChild(celda);
+            tabla.appendChild(hilera);
+            nota.detalles.map( v=>{
+                var hilera = document.createElement("tr");
+                var td = document.createElement('td');
+                td.innerHTML = v.texto;
+                td.style.cursor = "pointer";
+                td.onclick = function(){
+                    container .innerHTML = '';
+                    var input = document.createElement('textarea');
+                    input.setAttribute('id',  'nota');
+                    input.value = v.texto;
+                    var btn = document.createElement('button');
+                    btn.className = 'button2';
+                    btn.innerHTML = 'Save';
+                    btn.onclick = function(){
+                        notas.map(n=>{
+                            if(n.id == nota.id){
+                                n.detalles.map(de=>{
+                                    if(de.id == v.id){
+                                        de.texto = document.getElementById('nota').value;
+                                    }
+                                });
+                            }
+                        });
+                        obj.paintNotas();
+                    };
+                    container.appendChild(input);
+                    container.appendChild(btn);
+                };
+                hilera.appendChild(td);
+                tabla.appendChild(hilera);
+            });
+            var hilera = document.createElement("tr");
+            var td = document.createElement('td');
+            var btnAdd = document.createElement("button");
+            btnAdd.className = `button1`;
+            btnAdd.innerHTML = "add";
+            btnAdd.onclick = function(){
+                container .innerHTML = '';
+                var input = document.createElement('textarea');
+                input.setAttribute('id',  'nota');
+                input.value = '';
+                var btn = document.createElement('button');
+                btn.className = 'button2';
+                btn.innerHTML = 'Save';
+                btn.onclick = function(){
+                    notas.map(n=>{
+                        if(n.id == nota.id){
+                            n.detalles.push({ 
+                                id: ((new Date()).getTime() * parseInt((Math.random()*1000))),
+                                texto: document.getElementById('nota').value
+                            });
+                        }
+                    });
+                    obj.paintNotas();
+                };
+                container.appendChild(input);
+                container.appendChild(btn);
+            };
+            td.appendChild(btnAdd);
+            hilera.appendChild(td);
             tabla.appendChild(hilera);
         });
         container.appendChild(tabla);
