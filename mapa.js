@@ -676,6 +676,16 @@ var obj = {
                                 canvas.ctx.fillText(`${arayDatos['INT']}`, 250, 340);
                                 canvas.ctx.fillText(`${arayDatos['SAB']}`, 250, 385);
                                 canvas.ctx.fillText(`${arayDatos['CAR']}`, 250, 435);
+                                var arayPuntos = [];
+                                j.puntos.map(ha=>{
+                                    arayPuntos[ha.nombre] = ha.puntos;
+                                });
+                                canvas.ctx.fillText(`${arayPuntos['PV']}`, 440, 200);
+                                canvas.ctx.fillText(`${arayPuntos['MOV']}`, 440, 245);
+                                canvas.ctx.fillText(`${arayPuntos['DEF']}`, 440, 290);
+                                canvas.ctx.fillText(`${arayPuntos['ATQ']}`, 440, 340);
+                                canvas.ctx.fillText(`${arayPuntos['INST']}`, 440, 385);
+                                canvas.ctx.fillText(`${arayPuntos['POD']}`, 440, 435);
                                 canvas.ctx.font = "10px Arial Black";                                
                                 var salto = 20;
                                 var tempy = 105;
