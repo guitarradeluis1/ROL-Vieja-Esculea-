@@ -249,7 +249,7 @@ Jugador.prototype.ficha = function(lugar, show){
 	var titulo = document.createElement('p');
 	titulo.innerHTML = `<h3>Armor</h3>`;
 	divar.appendChild(titulo);
-	divar.appendChild( per.pintarList(per.armas, 'armas') );
+	divar.appendChild( per.pintarList(lugar ,per.armas, 'armas') );
 	divar.appendChild( per.pintarBtnSave('armas', 'armas', lugar, show) );
 	divsupremo.appendChild(divar);
 	//----------------------------------
@@ -258,7 +258,7 @@ Jugador.prototype.ficha = function(lugar, show){
 	var titulo = document.createElement('p');
 	titulo.innerHTML = `<h3>Items</h3>`
 	divit.appendChild(titulo);
-	divit.appendChild( per.pintarList(per.armas, 'equipamiento') );
+	divit.appendChild( per.pintarList(lugar, per.armas, 'equipamiento') );
 	divit.appendChild( per.pintarBtnSave('equipamiento', 'equipamiento', lugar, show) );
 	divsupremo.appendChild(divit);
 	//----------------------------------
@@ -267,7 +267,7 @@ Jugador.prototype.ficha = function(lugar, show){
 	var titulo = document.createElement('p');
 	titulo.innerHTML = `<h3>Talents</h3>`
 	diveq.appendChild(titulo);
-	diveq.appendChild( per.pintarList(per.armas, 'talents') );
+	diveq.appendChild( per.pintarList(lugar, per.armas, 'talents') );
 	diveq.appendChild( per.pintarBtnSave('talents', 'talents', lugar, show) );
 	divsupremo.appendChild(diveq);
 	//----------------------------------
@@ -525,7 +525,7 @@ Jugador.prototype.fromObjetos = function(){
 	return div;
 }
 
-Jugador.prototype.pintarList = function(data, armas){
+Jugador.prototype.pintarList = function(lugar, data, armas){
 	//id, nombe, cantidad, puntos, tipo
 	var per = this;
 	var container = document.createElement('div');
@@ -602,7 +602,7 @@ Jugador.prototype.pintarBtnSave= function(text, lugar, l, s){
 				tipo: text
 			});
 			place.innerHTML = '';
-			per.pintarList(per.armas, text);
+			per.pintarList(lugar, per.armas, text);
 			per.ficha(l,s);
 		};
 		place.appendChild(btn);
